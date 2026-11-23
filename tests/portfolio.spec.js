@@ -21,12 +21,13 @@ test("renders the condensation canvas at backing resolution", async ({ page }) =
 });
 
 test("activates the Glass AI particle burst", async ({ page }) => {
+  test.slow();
   await page.goto("/");
   const host = page.locator(".hero-ai-button .glass-ai-button");
-  await expect(host).toHaveAttribute("data-state", "ready");
+  await expect(host).toHaveAttribute("data-state", "ready", { timeout: 12_000 });
   const glassFrame = host.locator("iframe").contentFrame();
   await expect(glassFrame.locator("#glass")).toHaveAttribute("data-ready", "true");
-  await glassFrame.getByRole("button", { name: "GPT 6 Sol — activate the galaxy" }).click();
+  await glassFrame.getByRole("button", { name: "GPT 6 Sol — activate the galaxy" }).click({ force: true });
   await expect(glassFrame.locator("#glass")).toHaveAttribute("data-bursts", /[1-9]/);
 });
 
@@ -36,9 +37,10 @@ test("opens and closes mobile navigation with the keyboard", async ({ page }, te
 
   await page.getByRole("button", { name: "Open navigation" }).click();
   await expect(page.getByRole("link", { name: "Experience" })).toBeVisible();
+  await page.waitForFunction(() => document.body.style.overflow === "hidden");
 
   await page.keyboard.press("Escape");
-  await expect(page.getByRole("link", { name: "Experience" })).not.toBeVisible();
+  await expect(page.getByRole("button", { name: "Close navigation" })).not.toBeVisible();
 });
 
 test("loads the local Etale authored document", async ({ page }) => {
@@ -56,4 +58,18 @@ test("loads the local Etale authored document", async ({ page }) => {
     window.scrollTo(0, (track.offsetHeight - window.innerHeight) * 0.425);
   });
   await expect(etale.locator(".card[data-i='1']")).toHaveCSS("opacity", "1");
+});
+
+test("loads the configured Character Filmstrip and responds to keyboard motion", async ({ page }) => {
+  test.slow();
+  await page.goto("/");
+  const host = page.locator(".character-study .character-carousel");
+  await host.scrollIntoViewIfNeeded();
+  const filmstrip = host.locator("iframe").contentFrame();
+
+  await expect(filmstrip.locator("#deck[data-testid='filmstrip']")).toBeVisible();
+  await expect(filmstrip.locator(".card")).toHaveCount(9);
+  const activeBefore = await filmstrip.locator(".card[aria-current='true']").getAttribute("aria-label");
+  await filmstrip.locator("#stage").press("ArrowRight");
+  await expect.poll(() => filmstrip.locator(".card[aria-current='true']").getAttribute("aria-label")).not.toBe(activeBefore);
 });

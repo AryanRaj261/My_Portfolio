@@ -15,6 +15,7 @@ const navItems = [
 ];
 
 const GlassAiButton = lazy(() => import("./shaders/glass-ai-button/GlassAiButton").then((module) => ({ default: module.GlassAiButton })));
+const CharacterCarousel = lazy(() => import("./shaders/character-carousel/CharacterCarousel").then((module) => ({ default: module.CharacterCarousel })));
 
 const embers = Array.from({ length: 18 }, (_, index) => ({
   id: index,
@@ -152,7 +153,7 @@ export default function App() {
         </div>
         <div className="hero-portrait"><motion.img src={portrait} alt="Aryan Raj" initial={{ opacity: 0, y: 46 }} animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: [0, -8, 0] }} transition={{ opacity: { duration: .9, delay: .3 }, y: { duration: 5, repeat: Infinity, ease: "easeInOut" } }} /></div>
         <div className="hero-name" aria-hidden="true">ARYAN</div>
-        <div className="hero-bottom"><span>Scroll to enter</span><span className="hero-bottom__line" /><span>01 — 04</span></div>
+        <div className="hero-bottom"><span>Scroll to enter</span><span className="hero-bottom__line" /><span>01 — 06</span></div>
       </section>
 
       <div id="content">
@@ -213,8 +214,20 @@ export default function App() {
         <div className="shader-frame etale-study__frame"><EtaleNumeralPlates /></div>
       </section>
 
+      <section className="character-study" aria-labelledby="character-title">
+        <div className="character-study__intro section">
+          <Reveal><p className="eyebrow eyebrow--warm">04 / Motion study</p></Reveal>
+          <Reveal delay={.1}><div><h2 id="character-title">PEOPLE, IN<br /><em>SEQUENCE.</em></h2><p>A tactile editorial filmstrip, preserved with its authored pacing and perspective as a counterpoint to the portfolio’s interface work.</p></div></Reveal>
+        </div>
+        <div className="shader-frame character-study__frame">
+          <Suspense fallback={<div className="character-study__loading" aria-hidden="true" />}>
+            <CharacterCarousel variant="filmstrip" speed={1.00} scale={1.00} opacity={1.00} hue={0} saturation={1.00} brightness={1.00} />
+          </Suspense>
+        </div>
+      </section>
+
       <section id="experience" className="experience section" aria-labelledby="experience-title">
-        <Reveal><p className="eyebrow">03 / Experience & craft</p></Reveal>
+        <Reveal><p className="eyebrow">05 / Experience & craft</p></Reveal>
         <div className="experience-heading"><Reveal><h2 id="experience-title">CLEAR BY<br /><em>DESIGN.</em></h2></Reveal><Reveal delay={.12}><p>From structure to interaction, I pay attention to the small choices that make a site easier to navigate and more dependable across screen sizes.</p></Reveal></div>
         <div className="craft-grid">
           <Reveal delay={0}><article><small>01</small><h3>Interfaces</h3><p>Responsive, expressive web experiences made with React and modern frontend tools.</p></article></Reveal>
@@ -224,7 +237,7 @@ export default function App() {
       </section>
 
       <section id="contact" className="contact section" aria-labelledby="contact-title">
-        <Reveal><p className="eyebrow">04 / Contact</p></Reveal>
+        <Reveal><p className="eyebrow">06 / Contact</p></Reveal>
         <div className="contact-grid"><Reveal><h2 id="contact-title">LET’S TALK<br />ABOUT THE<br /><em>WORK.</em></h2></Reveal><Reveal className="contact-copy" delay={.13}><p>For frontend roles, collaboration or a project conversation, connect with me on LinkedIn.</p><a className="contact-link" href={linkedInProfile} target="_blank" rel="noreferrer">Connect on LinkedIn <FiArrowDownRight /></a><div><a href={githubProfile} target="_blank" rel="noreferrer"><FaGithub /> GitHub</a><a href={linkedInProfile} target="_blank" rel="noreferrer"><FaLinkedinIn /> LinkedIn</a></div></Reveal></div>
         <footer><span>© {new Date().getFullYear()} Aryan Raj</span><a href={portfolioRepository} target="_blank" rel="noreferrer">Portfolio source</a></footer>
       </section>

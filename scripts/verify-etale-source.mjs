@@ -3,6 +3,9 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const expected = {
+  "src/shaders/character-carousel/CharacterCarousel.tsx": "3bc9c80e8201be3cde79697e8cddba6f4f8b1a3c4a5fb7ce7533dd6479409472",
+  "src/shaders/character-carousel/sources/character-filmstrip.html": "4c98939e0e2b67efabcb8561c8b2e53b8c756e97bda44906b235ee7bc8f68b1c",
+  "src/shaders/character-carousel/sources/character-wave.html": "6726cf0db527043b2d5f15efb10ecfd059863ca2349c4099f5de161f94124a03",
   "src/shaders/glass-ai-button/GlassAiButton.tsx": "1a11cd583e856d3be328a0192be4d77184607c64721f3fb646bd6d61436b2104",
   "src/shaders/glass-ai-button/sources/glass-ai-button.html": "a484571de316c05ab7fbd2da82da5e028ee1ffe0bd169449fb8a3c7801abd81e",
   "src/shaders/aura-weekly-november-2026/EtaleNumeralPlates.tsx": "e42eef6d6f74c65e7d0bab36bc055b91e9310f9897f63919c8db7238767d7ae5",
@@ -33,4 +36,4 @@ if (mismatches.length) {
   process.exit(1);
 }
 
-console.log(`Verified ${Object.keys(expected).length} Etale source files and assets.`);
+console.log(`Verified ${Object.keys(expected).length} ThreeUI source files and assets.`);
