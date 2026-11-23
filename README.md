@@ -2,7 +2,7 @@
 
 A single-page React portfolio built with Vite and Framer Motion.
 
-Project documentation lives in [`docs/`](docs/): architecture, design system, product requirements, tasks, and project memory.
+Project documentation lives in [`docs/`](docs/), starting with its [documentation index](docs/readme.md).
 
 ## Run locally
 
