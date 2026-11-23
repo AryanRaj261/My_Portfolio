@@ -20,6 +20,16 @@ test("renders the condensation canvas at backing resolution", async ({ page }) =
   await expect.poll(() => canvas.evaluate((element) => element.width >= element.clientWidth && element.height >= element.clientHeight)).toBeTruthy();
 });
 
+test("activates the Glass AI particle burst", async ({ page }) => {
+  await page.goto("/");
+  const host = page.locator(".hero-ai-button .glass-ai-button");
+  await expect(host).toHaveAttribute("data-state", "ready");
+  const glassFrame = host.locator("iframe").contentFrame();
+  await expect(glassFrame.locator("#glass")).toHaveAttribute("data-ready", "true");
+  await glassFrame.getByRole("button", { name: "GPT 6 Sol — activate the galaxy" }).click();
+  await expect(glassFrame.locator("#glass")).toHaveAttribute("data-bursts", /[1-9]/);
+});
+
 test("opens and closes mobile navigation with the keyboard", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile", "Mobile-only interaction");
   await page.goto("/");

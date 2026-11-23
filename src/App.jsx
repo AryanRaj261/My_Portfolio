@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { FiArrowDownRight, FiDownload, FiMenu, FiX } from "react-icons/fi";
@@ -13,6 +13,8 @@ const navItems = [
   ["Experience", "experience"],
   ["Contact", "contact"],
 ];
+
+const GlassAiButton = lazy(() => import("./shaders/glass-ai-button/GlassAiButton").then((module) => ({ default: module.GlassAiButton })));
 
 const embers = Array.from({ length: 18 }, (_, index) => ({
   id: index,
@@ -145,7 +147,8 @@ export default function App() {
           <motion.p className="eyebrow" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .25, duration: .6 }}><i /> Frontend developer · India</motion.p>
           <motion.h1 id="hero-title" initial={{ opacity: 0, y: 55 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .1, duration: .95, ease: [0.16, 1, .3, 1] }}>FRONTENDS WITH<br /><em>A POINT OF VIEW.</em></motion.h1>
           <motion.p className="hero-body" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .45, duration: .75 }}>I’m Aryan Raj, a frontend developer focused on clear interfaces, considered interaction and reliable implementation.</motion.p>
-          <motion.a className="hero-circle" href="#work" initial={{ opacity: 0, scale: .75 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: .7, duration: .65, ease: [0.16, 1, .3, 1] }}><span>Explore<br />my work</span><FiArrowDownRight /></motion.a>
+          <motion.div className="hero-ai-button" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .7, duration: .65, ease: [0.16, 1, .3, 1] }}><Suspense fallback={<div className="hero-ai-button__loading" aria-hidden="true" />}><GlassAiButton /></Suspense></motion.div>
+          <motion.a className="hero-explore" href="#work" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .95, duration: .5 }}>Explore selected work <FiArrowDownRight /></motion.a>
         </div>
         <div className="hero-portrait"><motion.img src={portrait} alt="Aryan Raj" initial={{ opacity: 0, y: 46 }} animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: [0, -8, 0] }} transition={{ opacity: { duration: .9, delay: .3 }, y: { duration: 5, repeat: Infinity, ease: "easeInOut" } }} /></div>
         <div className="hero-name" aria-hidden="true">ARYAN</div>

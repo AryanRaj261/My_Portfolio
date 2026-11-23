@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const expected = {
+  "src/shaders/glass-ai-button/GlassAiButton.tsx": "1a11cd583e856d3be328a0192be4d77184607c64721f3fb646bd6d61436b2104",
+  "src/shaders/glass-ai-button/sources/glass-ai-button.html": "a484571de316c05ab7fbd2da82da5e028ee1ffe0bd169449fb8a3c7801abd81e",
   "src/shaders/aura-weekly-november-2026/EtaleNumeralPlates.tsx": "e42eef6d6f74c65e7d0bab36bc055b91e9310f9897f63919c8db7238767d7ae5",
   "src/shaders/aura-weekly-november-2026/AuraWeeklyDocument.tsx": "7917365ea5b4a0c1fa47cc4908894f94dd538b469215439108f040a4f397d0c7",
   "src/shaders/threeui.css": "efe4447139f1358dd8e9be68edf6fa46cbefbd1de423a4d6c439ca61d2c8eccf",
