@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, u
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { FiArrowDownRight, FiDownload, FiMenu, FiX } from "react-icons/fi";
 import portrait from "./assets/avatar.webp";
+import { EtaleNumeralPlates } from "./shaders/aura-weekly-november-2026/EtaleNumeralPlates";
 import { githubProfile, linkedInProfile, portfolioRepository, projects } from "./data/portfolio";
 
 const navItems = [
@@ -197,6 +198,14 @@ export default function App() {
             </button>
           ))}
         </div>
+      </section>
+
+      <section className="etale-study" aria-labelledby="etale-title">
+        <div className="etale-study__intro section">
+          <Reveal><p className="eyebrow">03 / Interaction study</p></Reveal>
+          <Reveal delay={.1}><div><h2 id="etale-title">NUMBERS IN<br /><em>MOTION.</em></h2><p>An authored scroll sequence, retained in its original form as a study in pacing, transition and spatial storytelling.</p></div></Reveal>
+        </div>
+        <div className="shader-frame etale-study__frame"><EtaleNumeralPlates /></div>
       </section>
 
       <section id="experience" className="experience section" aria-labelledby="experience-title">
