@@ -53,6 +53,6 @@ export const projects = [
   },
 ];
 
-export const portfolioRepository = "https://github.com/AryanRaj261/Portfolio";
+export const portfolioRepository = "https://github.com/AryanRaj261/My_Portfolio";
 export const githubProfile = "https://github.com/AryanRaj261";
 export const linkedInProfile = "https://www.linkedin.com/in/aryan-raj-087a852aa/";

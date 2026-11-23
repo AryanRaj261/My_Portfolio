@@ -12,6 +12,15 @@ const navItems = [
   ["Contact", "contact"],
 ];
 
+const embers = Array.from({ length: 18 }, (_, index) => ({
+  id: index,
+  x: `${5 + ((index * 37) % 91)}%`,
+  y: `${42 + ((index * 19) % 48)}%`,
+  size: `${2 + (index % 3)}px`,
+  delay: `${-(index % 7) * 0.72}s`,
+  duration: `${5.6 + (index % 5) * 0.8}s`,
+}));
+
 function Scene({ pointerX, pointerY }) {
   const moonX = useTransform(pointerX, (value) => value * 12);
   const moonY = useTransform(pointerY, (value) => value * 8);
@@ -19,17 +28,27 @@ function Scene({ pointerX, pointerY }) {
   const ridgeFrontX = useTransform(pointerX, (value) => value * -16);
   const gateX = useTransform(pointerX, (value) => value * -3);
   const gateY = useTransform(pointerY, (value) => value * -2);
+  const waterX = useTransform(pointerX, (value) => value * 6);
+  const waterY = useTransform(pointerY, (value) => value * 3);
 
   return (
     <div className="scene" aria-hidden="true">
+      <div className="scene-stars"><i /><i /><i /><i /><i /><i /></div>
       <motion.div className="scene-moon" style={{ x: moonX, y: moonY }} />
+      <motion.div className="scene-moon-reflection" style={{ x: waterX, y: waterY }} />
       <div className="scene-haze" />
       <motion.div className="scene-ridge scene-ridge--back" style={{ x: ridgeBackX }} />
       <motion.div className="scene-ridge scene-ridge--front" style={{ x: ridgeFrontX }} />
+      <motion.div className="scene-path" style={{ x: waterX }} />
       <motion.div className="scene-gate" style={{ x: gateX, y: gateY }}>
         <i /><i /><b /><b /><span />
       </motion.div>
+      <div className="scene-lanterns"><i /><i /><i /><i /></div>
+      <div className="scene-embers">
+        {embers.map((ember) => <i key={ember.id} style={{ "--x": ember.x, "--y": ember.y, "--size": ember.size, "--delay": ember.delay, "--duration": ember.duration }} />)}
+      </div>
       <div className="scene-grass"><i /><i /><i /><i /><i /><i /><i /><i /></div>
+      <div className="scene-vignette" />
     </div>
   );
 }
@@ -127,7 +146,7 @@ export default function App() {
         </div>
         <div className="hero-portrait"><motion.img src={portrait} alt="Aryan Raj" initial={{ opacity: 0, y: 46 }} animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: [0, -8, 0] }} transition={{ opacity: { duration: .9, delay: .3 }, y: { duration: 5, repeat: Infinity, ease: "easeInOut" } }} /></div>
         <div className="hero-name" aria-hidden="true">ARYAN</div>
-        <div className="hero-bottom"><span>Scroll to enter</span><span>01 — 04</span></div>
+        <div className="hero-bottom"><span>Scroll to enter</span><span className="hero-bottom__line" /><span>01 — 04</span></div>
       </section>
 
       <div id="content">
@@ -143,10 +162,10 @@ export default function App() {
       <section id="work" className="work section" aria-labelledby="work-title">
         <Reveal className="section-heading"><p className="eyebrow">02 / Selected work</p><span>Choose a project</span></Reveal>
         <Reveal className="project-stage">
-          <AnimatePresence mode="wait"><motion.div className="project-image" key={currentProject.id} initial={{ opacity: 0, scale: 1.05 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .98 }} transition={{ duration: .55, ease: [0.16, 1, .3, 1] }}><img src={currentProject.image} alt={currentProject.name + " project preview"} /></motion.div></AnimatePresence>
+          <AnimatePresence mode="wait"><motion.div className="project-image" key={currentProject.id} initial={{ opacity: 0, scale: 1.05 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .98 }} transition={{ duration: .55, ease: [0.16, 1, .3, 1] }}><img src={currentProject.image} alt={currentProject.name + " project preview"} /><span className="project-image__wash" /><span className="project-image__label">Selected interface / {currentProject.id}</span></motion.div></AnimatePresence>
           <AnimatePresence mode="wait">
           <motion.div className="project-content" key={currentProject.id} initial={reduceMotion ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={reduceMotion ? {} : { opacity: 0, y: -12 }} transition={{ duration: .38, ease: [0.16, 1, .3, 1] }}>
-            <span>{currentProject.id} / 03</span>
+            <div className="project-index"><span>{currentProject.id} / 03</span><span>Case study</span></div>
             <p>{currentProject.kind}</p>
             <h2 id="work-title">{currentProject.name}</h2>
             <div className="project-rule" />
