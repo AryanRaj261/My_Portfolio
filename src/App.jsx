@@ -187,7 +187,16 @@ export default function App() {
           </AnimatePresence>
           <div className="project-arrows"><button onClick={() => setActiveProject((index) => (index + projects.length - 1) % projects.length)} aria-label="Previous project">←</button><button onClick={() => setActiveProject((index) => (index + 1) % projects.length)} aria-label="Next project">→</button></div>
         </Reveal>
-        <div className="project-tabs" role="tablist" aria-label="Selected projects">{projects.map((project, index) => <button key={project.id} role="tab" aria-selected={index === activeProject} onClick={() => setActiveProject(index)} className={index === activeProject ? "active" : ""}><small>{project.id}</small>{project.name}</button>)}</div>
+        <div className="project-tabs project-tabs--plates" role="tablist" aria-label="Selected projects">
+          {projects.map((project, index) => (
+            <button key={project.id} role="tab" aria-selected={index === activeProject} onClick={() => setActiveProject(index)} className={index === activeProject ? "active" : ""}>
+              <span className="project-tabs__plate" aria-hidden="true">{project.id}</span>
+              <span className="project-tabs__copy"><small>{project.id} / 03 · Project</small>{project.name}</span>
+              <span className="project-tabs__arrow" aria-hidden="true">↗</span>
+              {index === activeProject && <motion.span className="project-tabs__active" layoutId="active-project-plate" transition={{ type: "spring", stiffness: 350, damping: 30 }} />}
+            </button>
+          ))}
+        </div>
       </section>
 
       <section id="experience" className="experience section" aria-labelledby="experience-title">
