@@ -4,6 +4,7 @@ import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { FiArrowDownRight, FiDownload, FiMenu, FiX } from "react-icons/fi";
 import portrait from "./assets/avatar.webp";
 import { CondensationBackground } from "./effects/condensation/CondensationBackground";
+import { PortfolioChatbot } from "./components/PortfolioChatbot";
 import { EtaleNumeralPlates } from "./shaders/aura-weekly-november-2026/EtaleNumeralPlates";
 import { githubProfile, linkedInProfile, portfolioRepository, projects } from "./data/portfolio";
 
@@ -255,6 +256,7 @@ export default function App() {
         <footer><span>© {new Date().getFullYear()} Aryan Raj</span><a href={portfolioRepository} target="_blank" rel="noreferrer">Portfolio source</a></footer>
       </section>
       </div>
+      <PortfolioChatbot />
     </main>
   );
 }

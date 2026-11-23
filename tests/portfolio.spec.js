@@ -95,3 +95,16 @@ test("loads the authored modern command dock and updates its active state", asyn
     await expect(primary).toHaveAttribute("data-dock-state", "static");
   }
 });
+
+test("opens the portfolio guide and answers a project question", async ({ page }) => {
+  await page.goto("/");
+  const launcher = page.getByRole("button", { name: "Open portfolio guide" });
+  await launcher.click();
+
+  const guide = page.getByRole("dialog", { name: "A quick way to explore." });
+  await expect(guide).toBeVisible();
+  await guide.getByRole("button", { name: "What does Aryan build?" }).click();
+  await expect(guide.getByText(/frontend UI work/i)).toBeVisible();
+  await guide.getByRole("button", { name: "Close portfolio guide" }).click();
+  await expect(guide).not.toBeVisible();
+});
