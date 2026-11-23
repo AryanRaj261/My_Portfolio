@@ -13,6 +13,13 @@ test("navigates to selected work and changes the active case study", async ({ pa
   await expect(page.getByText("Gaming discovery", { exact: true })).toBeVisible();
 });
 
+test("renders the condensation canvas at backing resolution", async ({ page }) => {
+  await page.goto("/");
+  const canvas = page.locator(".scene-condensation canvas");
+  await expect(canvas).toBeVisible();
+  await expect.poll(() => canvas.evaluate((element) => element.width >= element.clientWidth && element.height >= element.clientHeight)).toBeTruthy();
+});
+
 test("opens and closes mobile navigation with the keyboard", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile", "Mobile-only interaction");
   await page.goto("/");

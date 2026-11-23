@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, u
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { FiArrowDownRight, FiDownload, FiMenu, FiX } from "react-icons/fi";
 import portrait from "./assets/avatar.webp";
+import { CondensationBackground } from "./effects/condensation/CondensationBackground";
 import { EtaleNumeralPlates } from "./shaders/aura-weekly-november-2026/EtaleNumeralPlates";
 import { githubProfile, linkedInProfile, portfolioRepository, projects } from "./data/portfolio";
 
@@ -34,6 +35,7 @@ function Scene({ pointerX, pointerY }) {
 
   return (
     <div className="scene" aria-hidden="true">
+      <CondensationBackground className="scene-condensation" speed={0.23} dropAmount={0.44} opacity={0.36} />
       <div className="scene-stars"><i /><i /><i /><i /><i /><i /></div>
       <motion.div className="scene-moon" style={{ x: moonX, y: moonY }} />
       <motion.div className="scene-moon-reflection" style={{ x: waterX, y: waterY }} />
