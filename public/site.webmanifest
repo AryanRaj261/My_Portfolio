@@ -1,0 +1,23 @@
+{
+  "name": "Aryan Raj | Frontend Developer",
+  "short_name": "Aryan Raj",
+  "description": "Portfolio of Aryan Raj, a frontend developer.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#05070a",
+  "theme_color": "#05070a",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
