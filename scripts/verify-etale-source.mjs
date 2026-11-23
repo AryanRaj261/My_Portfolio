@@ -3,6 +3,11 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const expected = {
+  "src/shaders/animated-top-dock/AnimatedTopDock.tsx": "50ddbba7ebc81565f42bd14dda34efb45e7b18c1aa47e97f196256ffedb4478f",
+  "src/shaders/animated-top-dock/topDockController.ts": "506ab23d4d42cf1b5bc89131e7714586ee107381bb18d9b0302766e9a1dee2bd",
+  "src/shaders/animated-top-dock/retroPixelField.ts": "54f0469be51dfce2da7ce37c952d42c583cc7996794bf96d1ea0b2bb35d94115",
+  "src/shaders/animated-top-dock/glassParticleField.ts": "bc9f07ae6da33b28f82303ea937095806f8e3a2ab08bd1301ae8457aaf0c3464",
+  "src/shaders/fonts/fragment-mono.woff2": "4f4dc27f4a770c0d02fde800daa836c8adc0d1e423b28da74baaf0d1cc3ab96c",
   "src/shaders/character-carousel/CharacterCarousel.tsx": "3bc9c80e8201be3cde79697e8cddba6f4f8b1a3c4a5fb7ce7533dd6479409472",
   "src/shaders/character-carousel/sources/character-filmstrip.html": "4c98939e0e2b67efabcb8561c8b2e53b8c756e97bda44906b235ee7bc8f68b1c",
   "src/shaders/character-carousel/sources/character-wave.html": "6726cf0db527043b2d5f15efb10ecfd059863ca2349c4099f5de161f94124a03",

@@ -16,6 +16,7 @@ const navItems = [
 
 const GlassAiButton = lazy(() => import("./shaders/glass-ai-button/GlassAiButton").then((module) => ({ default: module.GlassAiButton })));
 const CharacterCarousel = lazy(() => import("./shaders/character-carousel/CharacterCarousel").then((module) => ({ default: module.CharacterCarousel })));
+const AnimatedTopDock = lazy(() => import("./shaders/animated-top-dock/AnimatedTopDock").then((module) => ({ default: module.AnimatedTopDock })));
 
 const embers = Array.from({ length: 18 }, (_, index) => ({
   id: index,
@@ -153,7 +154,7 @@ export default function App() {
         </div>
         <div className="hero-portrait"><motion.img src={portrait} alt="Aryan Raj" initial={{ opacity: 0, y: 46 }} animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: [0, -8, 0] }} transition={{ opacity: { duration: .9, delay: .3 }, y: { duration: 5, repeat: Infinity, ease: "easeInOut" } }} /></div>
         <div className="hero-name" aria-hidden="true">ARYAN</div>
-        <div className="hero-bottom"><span>Scroll to enter</span><span className="hero-bottom__line" /><span>01 — 06</span></div>
+        <div className="hero-bottom"><span>Scroll to enter</span><span className="hero-bottom__line" /><span>01 — 07</span></div>
       </section>
 
       <div id="content">
@@ -226,8 +227,20 @@ export default function App() {
         </div>
       </section>
 
+      <section className="dock-study" aria-labelledby="dock-title">
+        <div className="dock-study__intro section">
+          <Reveal><p className="eyebrow">05 / Command system</p></Reveal>
+          <Reveal delay={.1}><div><h2 id="dock-title">MOTION AT<br /><em>THE MARGIN.</em></h2><p>An authored command bar that makes navigation feel physical—built around proximity, a restrained spring, and clear states.</p></div></Reveal>
+        </div>
+        <div className="shader-frame dock-study__frame">
+          <Suspense fallback={<div className="dock-study__loading" aria-hidden="true" />}>
+            <AnimatedTopDock variant="modern" proximity={122} spring={0.19} damping={0.70} widthGrowth={17} heightGrowth={16} drop={3.5} />
+          </Suspense>
+        </div>
+      </section>
+
       <section id="experience" className="experience section" aria-labelledby="experience-title">
-        <Reveal><p className="eyebrow">05 / Experience & craft</p></Reveal>
+        <Reveal><p className="eyebrow">06 / Experience & craft</p></Reveal>
         <div className="experience-heading"><Reveal><h2 id="experience-title">CLEAR BY<br /><em>DESIGN.</em></h2></Reveal><Reveal delay={.12}><p>From structure to interaction, I pay attention to the small choices that make a site easier to navigate and more dependable across screen sizes.</p></Reveal></div>
         <div className="craft-grid">
           <Reveal delay={0}><article><small>01</small><h3>Interfaces</h3><p>Responsive, expressive web experiences made with React and modern frontend tools.</p></article></Reveal>
@@ -237,7 +250,7 @@ export default function App() {
       </section>
 
       <section id="contact" className="contact section" aria-labelledby="contact-title">
-        <Reveal><p className="eyebrow">06 / Contact</p></Reveal>
+        <Reveal><p className="eyebrow">07 / Contact</p></Reveal>
         <div className="contact-grid"><Reveal><h2 id="contact-title">LET’S TALK<br />ABOUT THE<br /><em>WORK.</em></h2></Reveal><Reveal className="contact-copy" delay={.13}><p>For frontend roles, collaboration or a project conversation, connect with me on LinkedIn.</p><a className="contact-link" href={linkedInProfile} target="_blank" rel="noreferrer">Connect on LinkedIn <FiArrowDownRight /></a><div><a href={githubProfile} target="_blank" rel="noreferrer"><FaGithub /> GitHub</a><a href={linkedInProfile} target="_blank" rel="noreferrer"><FaLinkedinIn /> LinkedIn</a></div></Reveal></div>
         <footer><span>© {new Date().getFullYear()} Aryan Raj</span><a href={portfolioRepository} target="_blank" rel="noreferrer">Portfolio source</a></footer>
       </section>

@@ -73,3 +73,25 @@ test("loads the configured Character Filmstrip and responds to keyboard motion",
   await filmstrip.locator("#stage").press("ArrowRight");
   await expect.poll(() => filmstrip.locator(".card[aria-current='true']").getAttribute("aria-label")).not.toBe(activeBefore);
 });
+
+test("loads the authored modern command dock and updates its active state", async ({ page }, testInfo) => {
+  test.slow();
+  await page.goto("/");
+  const dock = page.locator(".dock-study .animated-top-dock-component.atd-modern");
+  await dock.scrollIntoViewIfNeeded();
+  const primary = dock.locator(".atd-modern__dock");
+  const dockItems = primary.locator("button");
+
+  await expect(dock.locator(".atd-modern__bar")).toBeVisible();
+  await expect(dockItems).toHaveCount(5);
+  await dockItems.nth(2).click({ force: true });
+  await expect(dockItems.nth(2)).toHaveAttribute("aria-pressed", "true");
+
+  if (testInfo.project.name === "desktop") {
+    await dockItems.nth(3).hover();
+    await expect(primary).toHaveAttribute("data-dock-state", "active");
+    await expect.poll(() => primary.getAttribute("data-dock-max")).not.toBe("0.00");
+  } else {
+    await expect(primary).toHaveAttribute("data-dock-state", "static");
+  }
+});
