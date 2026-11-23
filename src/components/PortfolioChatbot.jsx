@@ -4,13 +4,13 @@ import { useEffect, useRef, useState } from "react";
 
 const prompts = ["What does Aryan build?", "What is the main stack?", "How can I get in touch?"];
 
-function replyFor(message) {
+function replyFor(message, email) {
   const question = message.toLowerCase();
   if (/(build|frontend|interface)/.test(question)) {
     return { text: "Aryan builds frontend UI work with clear information hierarchy, responsive layouts and purposeful motion—primarily in React.", action: { label: "See approach", href: "#about" } };
   }
   if (/(contact|email|linkedin|hire|reach)/.test(question)) {
-    return { text: "The fastest route is LinkedIn. You can also find Aryan’s GitHub and portfolio source in the contact section.", action: { label: "Open contact", href: "#contact" } };
+    return { text: "You can email Aryan directly or use LinkedIn. The contact section also includes the GitHub profile and portfolio source.", action: { label: "Email Aryan", href: `mailto:${email}` } };
   }
   if (/(project|work|gamily|hungry|ink)/.test(question)) {
     return { text: "The selected-work section covers Ink Creative Studio, Gamily and Hungry Tiger, including the brief, contribution, stack and outcomes for each.", action: { label: "See selected work", href: "#work" } };
@@ -27,7 +27,7 @@ function replyFor(message) {
   return { text: "I can help you find Aryan’s work, technical focus, experience, résumé or contact details. Try one of the quick prompts below." };
 }
 
-export function PortfolioChatbot() {
+export function PortfolioChatbot({ email }) {
   const [open, setOpen] = useState(false);
   const [minimized, setMinimized] = useState(false);
   const [input, setInput] = useState("");
@@ -36,6 +36,7 @@ export function PortfolioChatbot() {
   ]);
   const inputRef = useRef(null);
   const messagesRef = useRef(null);
+  const launcherRef = useRef(null);
   const responseTimer = useRef(0);
   const messageSequence = useRef(0);
 
@@ -43,7 +44,12 @@ export function PortfolioChatbot() {
 
   useEffect(() => {
     if (!open || minimized) return undefined;
-    const closeOnEscape = (event) => event.key === "Escape" && setOpen(false);
+    const closeOnEscape = (event) => {
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      setMinimized(false);
+      window.setTimeout(() => launcherRef.current?.focus(), 0);
+    };
     window.addEventListener("keydown", closeOnEscape);
     window.setTimeout(() => inputRef.current?.focus(), 120);
     return () => window.removeEventListener("keydown", closeOnEscape);
@@ -62,9 +68,15 @@ export function PortfolioChatbot() {
     setInput("");
     window.clearTimeout(responseTimer.current);
     responseTimer.current = window.setTimeout(() => {
-      const answer = replyFor(cleanMessage);
+      const answer = replyFor(cleanMessage, email);
       setMessages((current) => [...current, { id: `${id}-reply`, role: "bot", ...answer }]);
     }, 360);
+  };
+
+  const closeGuide = () => {
+    setOpen(false);
+    setMinimized(false);
+    window.setTimeout(() => launcherRef.current?.focus(), 0);
   };
 
   return (
@@ -74,6 +86,7 @@ export function PortfolioChatbot() {
           <motion.section
             className="portfolio-chat__panel"
             role="dialog"
+            id="portfolio-chat-panel"
             aria-modal="false"
             aria-labelledby="portfolio-chat-title"
             initial={{ opacity: 0, y: 18, scale: 0.96 }}
@@ -83,13 +96,13 @@ export function PortfolioChatbot() {
           >
             <header className="portfolio-chat__header">
               <div><span className="portfolio-chat__status" aria-hidden="true" /><p>Portfolio guide</p><h2 id="portfolio-chat-title">A quick way to explore.</h2></div>
-              <div className="portfolio-chat__controls"><button type="button" onClick={() => setMinimized(true)} aria-label="Minimize portfolio guide"><FiMinus /></button><button type="button" onClick={() => setOpen(false)} aria-label="Close portfolio guide"><FiX /></button></div>
+              <div className="portfolio-chat__controls"><button type="button" onClick={() => setMinimized(true)} aria-label="Minimize portfolio guide"><FiMinus /></button><button type="button" onClick={closeGuide} aria-label="Close portfolio guide"><FiX /></button></div>
             </header>
             <div className="portfolio-chat__messages" ref={messagesRef} aria-live="polite">
               {messages.map((message) => (
                 <div className={`portfolio-chat__message portfolio-chat__message--${message.role}`} key={message.id}>
                   <p>{message.text}</p>
-                  {message.action && <a href={message.action.href} download={message.action.download || undefined} onClick={() => setOpen(false)}>{message.action.label}</a>}
+                  {message.action && <a href={message.action.href} download={message.action.download || undefined} onClick={closeGuide}>{message.action.label}</a>}
                 </div>
               ))}
             </div>
@@ -107,10 +120,11 @@ export function PortfolioChatbot() {
       </AnimatePresence>
       <motion.button
         className={`portfolio-chat__launcher${open && !minimized ? " is-open" : ""}`}
+        ref={launcherRef}
         type="button"
         onClick={() => { setOpen(true); setMinimized(false); }}
         aria-expanded={open && !minimized}
-        aria-controls="portfolio-chat-input"
+        aria-controls={open && !minimized ? "portfolio-chat-panel" : undefined}
         aria-label={open && !minimized ? "Portfolio guide is open" : "Open portfolio guide"}
         whileHover={{ y: -4, scale: 1.035 }}
         whileTap={{ scale: 0.94 }}

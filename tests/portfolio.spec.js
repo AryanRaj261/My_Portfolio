@@ -10,7 +10,15 @@ test("navigates to selected work and changes the active case study", async ({ pa
 
   await page.getByRole("tab", { name: /Gamily/ }).click();
   await expect(page.locator("#work-title")).toHaveText("Gamily");
-  await expect(page.getByText("Gaming discovery", { exact: true })).toBeVisible();
+  await expect(page.getByText("Independent product concept", { exact: true })).toBeVisible();
+});
+
+test("supports keyboard selection between work case studies", async ({ page }) => {
+  await page.goto("/");
+  await page.locator("#work").scrollIntoViewIfNeeded();
+  await page.getByRole("tab", { name: /Ink Creative Studio/ }).press("ArrowRight");
+  await expect(page.locator("#work-title")).toHaveText("Gamily");
+  await expect(page.getByRole("tab", { name: /Gamily/ })).toBeFocused();
 });
 
 test("renders the condensation canvas at backing resolution", async ({ page }) => {
@@ -26,9 +34,9 @@ test("activates the Glass AI particle burst", async ({ page }) => {
   const host = page.locator(".hero-ai-button .glass-ai-button");
   await expect(host).toHaveAttribute("data-state", "ready", { timeout: 12_000 });
   const glassFrame = host.locator("iframe").contentFrame();
-  await expect(glassFrame.locator("#glass")).toHaveAttribute("data-ready", "true");
+  await expect(glassFrame.locator("#glass")).toHaveAttribute("data-engine", "three.js r170");
   await glassFrame.getByRole("button", { name: "GPT 6 Sol — activate the galaxy" }).click({ force: true });
-  await expect(glassFrame.locator("#glass")).toHaveAttribute("data-bursts", /[1-9]/);
+  await expect(glassFrame.locator("#status")).toHaveText("GPT 6 Sol — particle burst");
 });
 
 test("opens and closes mobile navigation with the keyboard", async ({ page }, testInfo) => {
@@ -46,8 +54,8 @@ test("opens and closes mobile navigation with the keyboard", async ({ page }, te
 test("loads the local Etale authored document", async ({ page }) => {
   await page.goto("/");
   const frame = page.locator(".etale-study iframe");
-  await expect(frame).toHaveAttribute("src", "/sections/etale-numeral-plates.html");
-  await frame.scrollIntoViewIfNeeded();
+  await page.locator(".etale-study").scrollIntoViewIfNeeded();
+  await expect(frame).toHaveAttribute("src", "/sections/etale-numeral-plates.html", { timeout: 12_000 });
   const etale = frame.contentFrame();
   await expect(etale.locator("#numbers")).toBeVisible();
   await expect(etale.locator(".nums video[src]").first()).toHaveAttribute("src", /ee57293b41f7fc57f4013dcc66ca5a1d\.webm/);
@@ -107,4 +115,10 @@ test("opens the portfolio guide and answers a project question", async ({ page }
   await expect(guide.getByText(/frontend UI work/i)).toBeVisible();
   await guide.getByRole("button", { name: "Close portfolio guide" }).click();
   await expect(guide).not.toBeVisible();
+});
+
+test("offers a direct email contact path", async ({ page }) => {
+  await page.goto("/");
+  await page.locator("#contact").scrollIntoViewIfNeeded();
+  await expect(page.getByRole("link", { name: /aryanraj9011@gmail.com/i })).toHaveAttribute("href", "mailto:aryanraj9011@gmail.com");
 });

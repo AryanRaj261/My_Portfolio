@@ -1,12 +1,11 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
-import { FiArrowDownRight, FiDownload, FiMenu, FiX } from "react-icons/fi";
+import { FiArrowDownRight, FiDownload, FiMail, FiMenu, FiX } from "react-icons/fi";
 import portrait from "./assets/avatar.webp";
 import { CondensationBackground } from "./effects/condensation/CondensationBackground";
 import { PortfolioChatbot } from "./components/PortfolioChatbot";
-import { EtaleNumeralPlates } from "./shaders/aura-weekly-november-2026/EtaleNumeralPlates";
-import { githubProfile, linkedInProfile, portfolioRepository, projects } from "./data/portfolio";
+import { contactEmail, credentials, documentedBuilds, githubProfile, linkedInProfile, portfolioRepository, projects } from "./data/portfolio";
 
 const navItems = [
   ["About", "about"],
@@ -18,6 +17,7 @@ const navItems = [
 const GlassAiButton = lazy(() => import("./shaders/glass-ai-button/GlassAiButton").then((module) => ({ default: module.GlassAiButton })));
 const CharacterCarousel = lazy(() => import("./shaders/character-carousel/CharacterCarousel").then((module) => ({ default: module.CharacterCarousel })));
 const AnimatedTopDock = lazy(() => import("./shaders/animated-top-dock/AnimatedTopDock").then((module) => ({ default: module.AnimatedTopDock })));
+const EtaleNumeralPlates = lazy(() => import("./shaders/aura-weekly-november-2026/EtaleNumeralPlates").then((module) => ({ default: module.EtaleNumeralPlates })));
 
 const embers = Array.from({ length: 18 }, (_, index) => ({
   id: index,
@@ -70,6 +70,26 @@ function Reveal({ children, className = "", delay = 0 }) {
   );
 }
 
+function DeferredVisual({ children, label }) {
+  const hostRef = useRef(null);
+  const [mounted, setMounted] = useState(() => typeof IntersectionObserver === "undefined");
+
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host || typeof IntersectionObserver === "undefined") return undefined;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry?.isIntersecting) {
+        setMounted(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: "520px 0px" });
+    observer.observe(host);
+    return () => observer.disconnect();
+  }, []);
+
+  return <div ref={hostRef} className="deferred-visual">{mounted ? children : <div className="deferred-visual__placeholder" aria-label={label}>{label}</div>}</div>;
+}
+
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeProject, setActiveProject] = useState(0);
@@ -83,6 +103,15 @@ export default function App() {
   const pointerX = useSpring(rawPointerX, { stiffness: 34, damping: 18, mass: 0.8 });
   const pointerY = useSpring(rawPointerY, { stiffness: 34, damping: 18, mass: 0.8 });
   const currentProject = projects[activeProject];
+  const selectProject = (index) => setActiveProject((index + projects.length) % projects.length);
+  const handleProjectKeyDown = (event, index) => {
+    const keys = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1, Home: -index, End: projects.length - 1 - index };
+    if (!(event.key in keys)) return;
+    event.preventDefault();
+    const nextIndex = (index + keys[event.key] + projects.length) % projects.length;
+    selectProject(nextIndex);
+    document.getElementById(`project-tab-${nextIndex}`)?.focus();
+  };
 
   useEffect(() => {
     const move = (event) => {
@@ -150,12 +179,14 @@ export default function App() {
           <motion.p className="eyebrow" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .25, duration: .6 }}><i /> Frontend developer · India</motion.p>
           <motion.h1 id="hero-title" initial={{ opacity: 0, y: 55 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .1, duration: .95, ease: [0.16, 1, .3, 1] }}>FRONTENDS WITH<br /><em>A POINT OF VIEW.</em></motion.h1>
           <motion.p className="hero-body" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .45, duration: .75 }}>I’m Aryan Raj, a frontend developer focused on clear interfaces, considered interaction and reliable implementation.</motion.p>
+          <motion.div className="hero-actions" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .58, duration: .65 }}><a className="hero-actions__primary" href="#work">View selected work</a><a className="hero-actions__secondary" href={`mailto:${contactEmail}`}><FiMail /> Email Aryan</a></motion.div>
+          <p className="hero-ai-study-label">Source-integrated interaction study</p>
           <motion.div className="hero-ai-button" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .7, duration: .65, ease: [0.16, 1, .3, 1] }}><Suspense fallback={<div className="hero-ai-button__loading" aria-hidden="true" />}><GlassAiButton /></Suspense></motion.div>
           <motion.a className="hero-explore" href="#work" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .95, duration: .5 }}>Explore selected work <FiArrowDownRight /></motion.a>
         </div>
         <div className="hero-portrait"><motion.img src={portrait} alt="Aryan Raj" initial={{ opacity: 0, y: 46 }} animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: [0, -8, 0] }} transition={{ opacity: { duration: .9, delay: .3 }, y: { duration: 5, repeat: Infinity, ease: "easeInOut" } }} /></div>
         <div className="hero-name" aria-hidden="true">ARYAN</div>
-        <div className="hero-bottom"><span>Scroll to enter</span><span className="hero-bottom__line" /><span>01 — 07</span></div>
+        <div className="hero-bottom"><span>Scroll to enter</span><span className="hero-bottom__line" /><span>01 — 08</span></div>
       </section>
 
       <div id="content">
@@ -173,8 +204,8 @@ export default function App() {
         <Reveal className="project-stage">
           <AnimatePresence mode="wait"><motion.div className="project-image" key={currentProject.id} initial={{ opacity: 0, scale: 1.05 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .98 }} transition={{ duration: .55, ease: [0.16, 1, .3, 1] }}><img src={currentProject.image} alt={currentProject.name + " project preview"} /><span className="project-image__wash" /><span className="project-image__label">Selected interface / {currentProject.id}</span></motion.div></AnimatePresence>
           <AnimatePresence mode="wait">
-          <motion.div className="project-content" key={currentProject.id} initial={reduceMotion ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={reduceMotion ? {} : { opacity: 0, y: -12 }} transition={{ duration: .38, ease: [0.16, 1, .3, 1] }}>
-            <div className="project-index"><span>{currentProject.id} / 03</span><span>Case study</span></div>
+          <motion.div id="project-panel" role="tabpanel" aria-labelledby={`project-tab-${activeProject}`} className="project-content" key={currentProject.id} initial={reduceMotion ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={reduceMotion ? {} : { opacity: 0, y: -12 }} transition={{ duration: .38, ease: [0.16, 1, .3, 1] }}>
+            <div className="project-index"><span>{currentProject.id} / 03</span><span>Concept case study</span></div>
             <p>{currentProject.kind}</p>
             <h2 id="work-title">{currentProject.name}</h2>
             <div className="project-rule" />
@@ -194,11 +225,11 @@ export default function App() {
             ) : <p className="project-availability">Public links are being prepared.</p>}
           </motion.div>
           </AnimatePresence>
-          <div className="project-arrows"><button onClick={() => setActiveProject((index) => (index + projects.length - 1) % projects.length)} aria-label="Previous project">←</button><button onClick={() => setActiveProject((index) => (index + 1) % projects.length)} aria-label="Next project">→</button></div>
+          <div className="project-arrows"><button onClick={() => selectProject(activeProject - 1)} aria-label="Previous project">←</button><button onClick={() => selectProject(activeProject + 1)} aria-label="Next project">→</button></div>
         </Reveal>
-        <div className="project-tabs project-tabs--plates" role="tablist" aria-label="Selected projects">
+        <div className="project-tabs project-tabs--plates" role="tablist" aria-label="Selected interface concepts" aria-orientation="horizontal">
           {projects.map((project, index) => (
-            <button key={project.id} role="tab" aria-selected={index === activeProject} onClick={() => setActiveProject(index)} className={index === activeProject ? "active" : ""}>
+            <button key={project.id} id={`project-tab-${index}`} role="tab" aria-controls="project-panel" aria-selected={index === activeProject} tabIndex={index === activeProject ? 0 : -1} onKeyDown={(event) => handleProjectKeyDown(event, index)} onClick={() => selectProject(index)} className={index === activeProject ? "active" : ""}>
               <span className="project-tabs__plate" aria-hidden="true">{project.id}</span>
               <span className="project-tabs__copy"><small>{project.id} / 03 · Project</small>{project.name}</span>
               <span className="project-tabs__arrow" aria-hidden="true">↗</span>
@@ -208,55 +239,61 @@ export default function App() {
         </div>
       </section>
 
+      <section className="build-record section" aria-labelledby="build-record-title">
+        <Reveal><p className="eyebrow eyebrow--dark">03 / Documented builds</p></Reveal>
+        <div className="build-record__heading"><Reveal><h2 id="build-record-title">WORK WITH<br /><em>TRACEABLE CONTEXT.</em></h2></Reveal><Reveal delay={.1}><p>These projects are documented in Aryan’s résumé. Public repositories are not currently available, so the descriptions stay specific about the work without inventing links or outcomes.</p></Reveal></div>
+        <div className="build-record__grid">
+          {documentedBuilds.map((build, index) => <Reveal key={build.name} delay={index * .08}><article><p>{build.kind}</p><h3>{build.name}</h3><ul className="build-record__stack">{build.stack.map((item) => <li key={item}>{item}</li>)}</ul><ul>{build.details.map((detail) => <li key={detail}>{detail}</li>)}</ul></article></Reveal>)}
+        </div>
+        <Reveal delay={.2}><div className="build-record__actions"><a className="line-link" href="/Resume.pdf" download>Download résumé <FiDownload /></a><a className="line-link" href={githubProfile} target="_blank" rel="noreferrer">View GitHub profile <FiArrowDownRight /></a></div></Reveal>
+      </section>
+
       <section className="etale-study" aria-labelledby="etale-title">
         <div className="etale-study__intro section">
-          <Reveal><p className="eyebrow">03 / Interaction study</p></Reveal>
-          <Reveal delay={.1}><div><h2 id="etale-title">NUMBERS IN<br /><em>MOTION.</em></h2><p>An authored scroll sequence, retained in its original form as a study in pacing, transition and spatial storytelling.</p></div></Reveal>
+          <Reveal><p className="eyebrow">04 / Integration study</p></Reveal>
+          <Reveal delay={.1}><div><h2 id="etale-title">NUMBERS IN<br /><em>MOTION.</em></h2><p>A source-backed interaction integration, retained as a study in pacing, transition and spatial storytelling—not presented as client work.</p></div></Reveal>
         </div>
-        <div className="shader-frame etale-study__frame"><EtaleNumeralPlates /></div>
+        <div className="shader-frame etale-study__frame"><DeferredVisual label="Load the Étale interaction study"><Suspense fallback={<div className="etale-study__loading" aria-hidden="true" />}><EtaleNumeralPlates /></Suspense></DeferredVisual></div>
       </section>
 
       <section className="character-study" aria-labelledby="character-title">
         <div className="character-study__intro section">
-          <Reveal><p className="eyebrow eyebrow--warm">04 / Motion study</p></Reveal>
-          <Reveal delay={.1}><div><h2 id="character-title">PEOPLE, IN<br /><em>SEQUENCE.</em></h2><p>A tactile editorial filmstrip, preserved with its authored pacing and perspective as a counterpoint to the portfolio’s interface work.</p></div></Reveal>
+          <Reveal><p className="eyebrow eyebrow--warm">05 / Integration study</p></Reveal>
+          <Reveal delay={.1}><div><h2 id="character-title">PEOPLE, IN<br /><em>SEQUENCE.</em></h2><p>A source-backed editorial filmstrip integrated as a motion and accessibility exercise, separate from portfolio client or product work.</p></div></Reveal>
         </div>
         <div className="shader-frame character-study__frame">
-          <Suspense fallback={<div className="character-study__loading" aria-hidden="true" />}>
-            <CharacterCarousel variant="filmstrip" speed={1.00} scale={1.00} opacity={1.00} hue={0} saturation={1.00} brightness={1.00} />
-          </Suspense>
+          <DeferredVisual label="Load the character filmstrip study"><Suspense fallback={<div className="character-study__loading" aria-hidden="true" />}><CharacterCarousel variant="filmstrip" speed={1.00} scale={1.00} opacity={1.00} hue={0} saturation={1.00} brightness={1.00} /></Suspense></DeferredVisual>
         </div>
       </section>
 
       <section className="dock-study" aria-labelledby="dock-title">
         <div className="dock-study__intro section">
-          <Reveal><p className="eyebrow">05 / Command system</p></Reveal>
-          <Reveal delay={.1}><div><h2 id="dock-title">MOTION AT<br /><em>THE MARGIN.</em></h2><p>An authored command bar that makes navigation feel physical—built around proximity, a restrained spring, and clear states.</p></div></Reveal>
+          <Reveal><p className="eyebrow">06 / Integration study</p></Reveal>
+          <Reveal delay={.1}><div><h2 id="dock-title">MOTION AT<br /><em>THE MARGIN.</em></h2><p>A source-backed command bar integrated to study proximity, spring dynamics and responsive interaction states.</p></div></Reveal>
         </div>
         <div className="shader-frame dock-study__frame">
-          <Suspense fallback={<div className="dock-study__loading" aria-hidden="true" />}>
-            <AnimatedTopDock variant="modern" proximity={122} spring={0.19} damping={0.70} widthGrowth={17} heightGrowth={16} drop={3.5} />
-          </Suspense>
+          <DeferredVisual label="Load the command-bar interaction study"><Suspense fallback={<div className="dock-study__loading" aria-hidden="true" />}><AnimatedTopDock variant="modern" proximity={122} spring={0.19} damping={0.70} widthGrowth={17} heightGrowth={16} drop={3.5} /></Suspense></DeferredVisual>
         </div>
       </section>
 
       <section id="experience" className="experience section" aria-labelledby="experience-title">
-        <Reveal><p className="eyebrow">06 / Experience & craft</p></Reveal>
+        <Reveal><p className="eyebrow">07 / Experience & craft</p></Reveal>
         <div className="experience-heading"><Reveal><h2 id="experience-title">CLEAR BY<br /><em>DESIGN.</em></h2></Reveal><Reveal delay={.12}><p>From structure to interaction, I pay attention to the small choices that make a site easier to navigate and more dependable across screen sizes.</p></Reveal></div>
         <div className="craft-grid">
           <Reveal delay={0}><article><small>01</small><h3>Interfaces</h3><p>Responsive, expressive web experiences made with React and modern frontend tools.</p></article></Reveal>
           <Reveal delay={.1}><article><small>02</small><h3>Motion</h3><p>Purposeful interaction and animation that guide attention without getting in the way.</p></article></Reveal>
           <Reveal delay={.2}><article><small>03</small><h3>Experience</h3><p><strong>CRM Intern · HighRadius</strong><br />October 2023 — February 2024</p></article></Reveal>
         </div>
+        <div className="credential-row" aria-label="Selected credentials">{credentials.map((credential) => <span key={credential}>{credential}</span>)}</div>
       </section>
 
       <section id="contact" className="contact section" aria-labelledby="contact-title">
-        <Reveal><p className="eyebrow">07 / Contact</p></Reveal>
-        <div className="contact-grid"><Reveal><h2 id="contact-title">LET’S TALK<br />ABOUT THE<br /><em>WORK.</em></h2></Reveal><Reveal className="contact-copy" delay={.13}><p>For frontend roles, collaboration or a project conversation, connect with me on LinkedIn.</p><a className="contact-link" href={linkedInProfile} target="_blank" rel="noreferrer">Connect on LinkedIn <FiArrowDownRight /></a><div><a href={githubProfile} target="_blank" rel="noreferrer"><FaGithub /> GitHub</a><a href={linkedInProfile} target="_blank" rel="noreferrer"><FaLinkedinIn /> LinkedIn</a></div></Reveal></div>
+        <Reveal><p className="eyebrow">08 / Contact</p></Reveal>
+        <div className="contact-grid"><Reveal><h2 id="contact-title">LET’S TALK<br />ABOUT THE<br /><em>WORK.</em></h2></Reveal><Reveal className="contact-copy" delay={.13}><p>For frontend roles, collaboration or a project conversation, email Aryan directly or connect on LinkedIn.</p><div className="contact-actions"><a className="contact-link" href={`mailto:${contactEmail}`}><FiMail /> {contactEmail}</a><a className="contact-link contact-link--secondary" href={linkedInProfile} target="_blank" rel="noreferrer">Connect on LinkedIn <FiArrowDownRight /></a></div><div><a href={githubProfile} target="_blank" rel="noreferrer"><FaGithub /> GitHub</a><a href={linkedInProfile} target="_blank" rel="noreferrer"><FaLinkedinIn /> LinkedIn</a></div></Reveal></div>
         <footer><span>© {new Date().getFullYear()} Aryan Raj</span><a href={portfolioRepository} target="_blank" rel="noreferrer">Portfolio source</a></footer>
       </section>
       </div>
-      <PortfolioChatbot />
+      <PortfolioChatbot email={contactEmail} />
     </main>
   );
 }
