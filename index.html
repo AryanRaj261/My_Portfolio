@@ -8,6 +8,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Aryan Raj is a frontend developer building responsive, visually polished web experiences with React." />
     <meta name="theme-color" content="#050505" />
+    <script>
+      try {
+        const savedTheme = localStorage.getItem("aryan-portfolio-theme");
+        const theme = savedTheme === "light" || savedTheme === "dark"
+          ? savedTheme
+          : (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        document.querySelector('meta[name="theme-color"]').setAttribute("content", theme === "light" ? "#f1f2ed" : "#05070a");
+      } catch (_) {}
+    </script>
     <meta name="author" content="Aryan Raj" />
     <meta name="robots" content="index, follow" />
     <meta property="og:type" content="website" />

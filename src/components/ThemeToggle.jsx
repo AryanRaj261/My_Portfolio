@@ -15,6 +15,8 @@ export function ThemeToggle() {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme === "light" ? "#f1f2ed" : "#05070a");
     window.localStorage.setItem(storageKey, theme);
   }, [theme]);
 
