@@ -27,6 +27,10 @@ npm run verify:etale
 npm run test:e2e
 ```
 
+## Authentication setup
+
+The portfolio includes a Supabase Auth integration for email/phone OTP, Google/Facebook/X OAuth, and authenticator-app MFA. It remains safely inactive until `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` are configured. See [authentication setup](docs/auth.md).
+
 ## Deployment SEO
 
 Copy `.env.example` to `.env` and set the final public site URL before deploying:

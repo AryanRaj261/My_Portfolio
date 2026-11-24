@@ -14,6 +14,8 @@ npm run dev
 
 Open the local URL printed by Vite.
 
+To enable the authentication backend, copy `.env.example` to `.env.local`, configure the browser-safe Supabase values, and follow [auth.md](./auth.md). Do not add service-role keys to the frontend.
+
 ## Production preview
 
 ```bash

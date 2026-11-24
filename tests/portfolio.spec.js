@@ -4,7 +4,7 @@ test("navigates to selected work and changes the active case study", async ({ pa
   await page.goto("/");
   await page.emulateMedia({ reducedMotion: "reduce" });
 
-  await expect(page.locator(".portfolio-dock__shortcuts a[href='#work']")).toHaveAttribute("href", "#work");
+  await expect(page.locator(".portfolio-nav__links a[href='#work']")).toHaveAttribute("href", "#work");
   await page.locator("#work").scrollIntoViewIfNeeded();
   await expect(page.locator("#work-title")).toHaveText("Ink Creative Studio");
 
@@ -39,12 +39,13 @@ test("activates the Glass AI particle burst", async ({ page }) => {
   await expect(glassFrame.locator("#status")).toHaveText("GPT 6 Sol — particle burst");
 });
 
-test("keeps portfolio section shortcuts available on mobile", async ({ page }, testInfo) => {
+test("keeps portfolio section navigation available on mobile", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile", "Mobile-only interaction");
   await page.goto("/");
 
-  await expect(page.locator(".portfolio-dock .atd-modern__bar")).toBeVisible();
-  await expect(page.locator(".portfolio-dock__shortcuts a[href='#contact']")).toHaveAttribute("href", "#contact");
+  await page.getByRole("button", { name: "Open navigation" }).click();
+  await expect(page.getByRole("link", { name: "Experience" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Contact" })).toHaveAttribute("href", "#contact");
 });
 
 test("loads the local Etale authored document", async ({ page }) => {
@@ -78,25 +79,28 @@ test("loads the configured Character Filmstrip and responds to keyboard motion",
   await expect.poll(() => filmstrip.locator(".card[aria-current='true']").getAttribute("aria-label")).not.toBe(activeBefore);
 });
 
-test("loads the authored modern command dock and updates its active state", async ({ page }, testInfo) => {
-  test.slow();
+test("keeps the portfolio command navigation destinations intact", async ({ page }) => {
   await page.goto("/");
-  const dock = page.locator(".portfolio-dock .animated-top-dock-component.atd-modern");
-  const primary = dock.locator(".atd-modern__dock");
-  const dockItems = primary.locator("button");
+  await expect(page.getByRole("link", { name: "About" }).first()).toHaveAttribute("href", "#about");
+  await expect(page.getByRole("link", { name: "Work" }).first()).toHaveAttribute("href", "#work");
+  await expect(page.getByRole("link", { name: "Experience" }).first()).toHaveAttribute("href", "#experience");
+  await expect(page.getByRole("link", { name: "Contact" }).first()).toHaveAttribute("href", "#contact");
+});
 
-  await expect(dock.locator(".atd-modern__bar")).toBeVisible();
-  await expect(dockItems).toHaveCount(5);
-  await dockItems.nth(2).click({ force: true });
-  await expect(dockItems.nth(2)).toHaveAttribute("aria-pressed", "true");
-
-  if (testInfo.project.name === "desktop") {
-    await dockItems.nth(3).hover();
-    await expect(primary).toHaveAttribute("data-dock-state", "active");
-    await expect.poll(() => primary.getAttribute("data-dock-max")).not.toBe("0.00");
+test("switches the persisted color theme and opens the secure access dialog", async ({ page }, testInfo) => {
+  await page.goto("/");
+  const toggle = page.getByRole("button", { name: /Switch to .* mode/ });
+  const before = await page.locator("html").getAttribute("data-theme");
+  await toggle.click();
+  await expect(page.locator("html")).not.toHaveAttribute("data-theme", before || "");
+  if (testInfo.project.name === "mobile") {
+    await page.getByRole("button", { name: "Open navigation" }).click();
+    await page.getByRole("button", { name: "Log in or sign up" }).click();
   } else {
-    await expect(primary).toHaveAttribute("data-dock-state", "static");
+    await page.getByRole("button", { name: "Log in" }).click();
   }
+  await expect(page.getByRole("dialog", { name: /Welcome back/ })).toBeVisible();
+  await expect(page.getByText(/Authentication needs configuration/i)).toBeVisible();
 });
 
 test("opens the portfolio guide and answers a project question", async ({ page }) => {

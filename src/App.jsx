@@ -5,6 +5,7 @@ import { FiArrowDownRight, FiDownload, FiMail } from "react-icons/fi";
 import portrait from "./assets/avatar.webp";
 import { CondensationBackground } from "./effects/condensation/CondensationBackground";
 import { PortfolioChatbot } from "./components/PortfolioChatbot";
+import { PortfolioNav } from "./components/PortfolioNav";
 import { contactEmail, credentials, documentedBuilds, githubProfile, linkedInProfile, portfolioRepository, projects } from "./data/portfolio";
 
 const navItems = [
@@ -16,8 +17,8 @@ const navItems = [
 
 const GlassAiButton = lazy(() => import("./shaders/glass-ai-button/GlassAiButton").then((module) => ({ default: module.GlassAiButton })));
 const CharacterCarousel = lazy(() => import("./shaders/character-carousel/CharacterCarousel").then((module) => ({ default: module.CharacterCarousel })));
-const AnimatedTopDock = lazy(() => import("./shaders/animated-top-dock/AnimatedTopDock").then((module) => ({ default: module.AnimatedTopDock })));
 const EtaleNumeralPlates = lazy(() => import("./shaders/aura-weekly-november-2026/EtaleNumeralPlates").then((module) => ({ default: module.EtaleNumeralPlates })));
+const AuthDialog = lazy(() => import("./components/AuthDialog").then((module) => ({ default: module.AuthDialog })));
 
 const embers = Array.from({ length: 18 }, (_, index) => ({
   id: index,
@@ -93,6 +94,8 @@ function DeferredVisual({ children, label }) {
 export default function App() {
   const [activeProject, setActiveProject] = useState(0);
   const [activeSection, setActiveSection] = useState("top");
+  const [authOpen, setAuthOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
   const scrollProgress = useSpring(scrollYProgress, { stiffness: 110, damping: 28, restDelta: 0.001 });
@@ -142,16 +145,7 @@ export default function App() {
     <main className="portfolio">
       <div className="noise" aria-hidden="true" />
       <a className="skip-link" href="#content">Skip to content</a>
-      <header className="portfolio-dock" aria-label="Portfolio command bar">
-        <Suspense fallback={<div className="portfolio-dock__loading" aria-hidden="true" />}>
-          <AnimatedTopDock variant="modern" proximity={122} spring={0.19} damping={0.70} widthGrowth={17} heightGrowth={16} drop={3.5} />
-        </Suspense>
-        <nav className="portfolio-dock__shortcuts" aria-label="Portfolio sections">
-          <a href="#top" aria-current={activeSection === "top" ? "page" : undefined}>Home</a>
-          {navItems.map(([label, id]) => <a key={id} href={"#" + id} aria-current={activeSection === id ? "page" : undefined}>{label}</a>)}
-        </nav>
-        <motion.span className="portfolio-dock__progress" style={{ scaleX: scrollProgress }} aria-hidden="true" />
-      </header>
+      <PortfolioNav activeSection={activeSection} navItems={navItems} onOpenAuth={() => setAuthOpen(true)} scrollProgress={scrollProgress} user={currentUser} />
 
       <section id="top" className="hero" aria-labelledby="hero-title">
         <Scene pointerX={pointerX} pointerY={pointerY} />
@@ -264,6 +258,7 @@ export default function App() {
       </section>
       </div>
       <PortfolioChatbot email={contactEmail} />
+      {authOpen && <Suspense fallback={null}><AuthDialog open={authOpen} onClose={() => setAuthOpen(false)} onSessionChange={setCurrentUser} /></Suspense>}
     </main>
   );
 }
