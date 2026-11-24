@@ -28,7 +28,6 @@ npm run preview
 ```bash
 npm run lint
 npm run typecheck
-npm run verify:etale
 npm run test:e2e
 ```
 

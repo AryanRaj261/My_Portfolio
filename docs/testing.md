@@ -6,7 +6,6 @@
 npm run lint
 npm run typecheck
 npm run build
-npm run verify:etale
 npm run test:e2e
 ```
 
@@ -14,15 +13,13 @@ npm run test:e2e
 
 - Work project switching by pointer and keyboard.
 - Condensation canvas backing resolution.
-- Glass AI Button activation.
 - Mobile navigation keyboard behavior.
-- Étale, Character Carousel, and Animated Top Dock authored study loading and interactions.
 - Portfolio guide open/close behavior.
 - Direct email contact path.
 
 ## Browser test design
 
-Playwright runs one worker because several tests initialize WebGL or media-heavy iframe studies. This prevents resource contention and makes the suite more stable in local and CI environments.
+Playwright runs one worker so desktop and mobile interactions are checked deterministically in local and CI environments.
 
 ## Manual regression checks
 

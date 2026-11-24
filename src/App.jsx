@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { FiArrowDownRight, FiDownload, FiMail } from "react-icons/fi";
@@ -15,9 +15,6 @@ const navItems = [
   ["Contact", "contact"],
 ];
 
-const GlassAiButton = lazy(() => import("./shaders/glass-ai-button/GlassAiButton").then((module) => ({ default: module.GlassAiButton })));
-const CharacterCarousel = lazy(() => import("./shaders/character-carousel/CharacterCarousel").then((module) => ({ default: module.CharacterCarousel })));
-const EtaleNumeralPlates = lazy(() => import("./shaders/aura-weekly-november-2026/EtaleNumeralPlates").then((module) => ({ default: module.EtaleNumeralPlates })));
 const AuthDialog = lazy(() => import("./components/AuthDialog").then((module) => ({ default: module.AuthDialog })));
 
 const embers = Array.from({ length: 18 }, (_, index) => ({
@@ -69,26 +66,6 @@ function Reveal({ children, className = "", delay = 0 }) {
       {children}
     </motion.div>
   );
-}
-
-function DeferredVisual({ children, label }) {
-  const hostRef = useRef(null);
-  const [mounted, setMounted] = useState(() => typeof IntersectionObserver === "undefined");
-
-  useEffect(() => {
-    const host = hostRef.current;
-    if (!host || typeof IntersectionObserver === "undefined") return undefined;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry?.isIntersecting) {
-        setMounted(true);
-        observer.disconnect();
-      }
-    }, { rootMargin: "520px 0px" });
-    observer.observe(host);
-    return () => observer.disconnect();
-  }, []);
-
-  return <div ref={hostRef} className="deferred-visual">{mounted ? children : <div className="deferred-visual__placeholder" role="status">{label}</div>}</div>;
 }
 
 export default function App() {
@@ -154,8 +131,6 @@ export default function App() {
           <motion.h1 id="hero-title" initial={{ opacity: 0, y: 55 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .1, duration: .95, ease: [0.16, 1, .3, 1] }}>FRONTENDS WITH<br /><em>A POINT OF VIEW.</em></motion.h1>
           <motion.p className="hero-body" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .45, duration: .75 }}>I’m Aryan Raj, a frontend developer building responsive interfaces with clear hierarchy, thoughtful interaction and dependable implementation.</motion.p>
           <motion.div className="hero-actions" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .58, duration: .65 }}><a className="hero-actions__primary" href="#work">View selected work</a><a className="hero-actions__secondary" href={`mailto:${contactEmail}`}><FiMail /> Email Aryan</a></motion.div>
-          <p className="hero-ai-study-label">Optional interaction study</p>
-          <motion.div className="hero-ai-button" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .7, duration: .65, ease: [0.16, 1, .3, 1] }}><Suspense fallback={<div className="hero-ai-button__loading" aria-hidden="true" />}><GlassAiButton /></Suspense></motion.div>
           <motion.a className="hero-explore" href="#work" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .95, duration: .5 }}>Explore selected work <FiArrowDownRight /></motion.a>
         </div>
         <div className="hero-portrait"><motion.img src={portrait} alt="Aryan Raj" initial={{ opacity: 0, y: 46 }} animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: [0, -8, 0] }} transition={{ opacity: { duration: .9, delay: .3 }, y: { duration: 5, repeat: Infinity, ease: "easeInOut" } }} /></div>
@@ -220,24 +195,6 @@ export default function App() {
           {documentedBuilds.map((build, index) => <Reveal key={build.name} delay={index * .08}><article><p>{build.kind}</p><h3>{build.name}</h3><ul className="build-record__stack">{build.stack.map((item) => <li key={item}>{item}</li>)}</ul><ul>{build.details.map((detail) => <li key={detail}>{detail}</li>)}</ul></article></Reveal>)}
         </div>
         <Reveal delay={.2}><div className="build-record__actions"><a className="line-link" href="/Resume.pdf" download>Download résumé <FiDownload /></a><a className="line-link" href={githubProfile} target="_blank" rel="noreferrer">View GitHub profile <FiArrowDownRight /></a></div></Reveal>
-      </section>
-
-      <section className="etale-study" aria-labelledby="etale-title">
-        <div className="etale-study__intro section">
-          <Reveal><p className="eyebrow">04 / Interaction lab</p></Reveal>
-          <Reveal delay={.1}><div><h2 id="etale-title">INTERACTION<br /><em>LAB.</em></h2><p>A source-backed interaction integration, retained as a study in pacing, transition and spatial storytelling—not presented as client work.</p></div></Reveal>
-        </div>
-        <div className="shader-frame etale-study__frame"><DeferredVisual label="Loading the Étale interaction study"><Suspense fallback={<div className="etale-study__loading" aria-hidden="true" />}><EtaleNumeralPlates /></Suspense></DeferredVisual></div>
-      </section>
-
-      <section className="character-study" aria-labelledby="character-title">
-        <div className="character-study__intro section">
-          <Reveal><p className="eyebrow eyebrow--warm">05 / Motion study</p></Reveal>
-          <Reveal delay={.1}><div><h2 id="character-title">PEOPLE, IN<br /><em>SEQUENCE.</em></h2><p>A source-backed editorial filmstrip integrated as a motion and accessibility exercise, separate from portfolio client or product work.</p></div></Reveal>
-        </div>
-        <div className="shader-frame character-study__frame">
-          <DeferredVisual label="Loading the character filmstrip study"><Suspense fallback={<div className="character-study__loading" aria-hidden="true" />}><CharacterCarousel variant="filmstrip" speed={1.00} scale={1.00} opacity={1.00} hue={0} saturation={1.00} brightness={1.00} /></Suspense></DeferredVisual>
-        </div>
       </section>
 
       <section id="experience" className="experience section" aria-labelledby="experience-title">

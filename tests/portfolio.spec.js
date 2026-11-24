@@ -28,17 +28,6 @@ test("renders the condensation canvas at backing resolution", async ({ page }) =
   await expect.poll(() => canvas.evaluate((element) => element.width >= element.clientWidth && element.height >= element.clientHeight)).toBeTruthy();
 });
 
-test("activates the Glass AI particle burst", async ({ page }) => {
-  test.slow();
-  await page.goto("/");
-  const host = page.locator(".hero-ai-button .glass-ai-button");
-  await expect(host).toHaveAttribute("data-state", "ready", { timeout: 12_000 });
-  const glassFrame = host.locator("iframe").contentFrame();
-  await expect(glassFrame.locator("#glass")).toHaveAttribute("data-engine", "three.js r170");
-  await glassFrame.getByRole("button", { name: "GPT 6 Sol — activate the galaxy" }).click({ force: true });
-  await expect(glassFrame.locator("#status")).toHaveText("GPT 6 Sol — particle burst");
-});
-
 test("keeps portfolio section navigation available on mobile", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile", "Mobile-only interaction");
   await page.goto("/");
@@ -46,40 +35,6 @@ test("keeps portfolio section navigation available on mobile", async ({ page }, 
   await page.getByRole("button", { name: "Open navigation" }).click();
   await expect(page.getByRole("link", { name: "Experience" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Contact" })).toHaveAttribute("href", "#contact");
-});
-
-test("loads the local Etale authored document", async ({ page }) => {
-  await page.goto("/");
-  const frame = page.locator(".etale-study iframe");
-  await page.locator(".etale-study").scrollIntoViewIfNeeded();
-  await expect(frame).toHaveAttribute("src", "/sections/etale-numeral-plates.html", { timeout: 12_000 });
-  const etale = frame.contentFrame();
-  await expect(etale.locator("#numbers")).toBeVisible();
-  await expect(etale.locator(".nums video[src]").first()).toHaveAttribute("src", /ee57293b41f7fc57f4013dcc66ca5a1d\.webm/);
-
-  const authoredFrame = page.frames().find((candidate) => candidate.url().includes("/sections/etale-numeral-plates.html"));
-  await authoredFrame.evaluate(() => {
-    const track = document.querySelector(".numbers .track");
-    window.scrollTo(0, (track.offsetHeight - window.innerHeight) * 0.425);
-  });
-  await expect(etale.locator(".card[data-i='1']")).toHaveCSS("opacity", "1");
-});
-
-test("loads the configured Character Filmstrip and responds to keyboard motion", async ({ page }) => {
-  test.slow();
-  await page.goto("/");
-  // The authored document is deferred until its viewport container approaches
-  // the screen. Scroll the stable container first, then wait for its lazy host.
-  await page.locator(".character-study__frame").scrollIntoViewIfNeeded();
-  const host = page.locator(".character-study .character-carousel");
-  await expect(host).toBeVisible();
-  const filmstrip = host.locator("iframe").contentFrame();
-
-  await expect(filmstrip.locator("#deck[data-testid='filmstrip']")).toBeVisible();
-  await expect(filmstrip.locator(".card")).toHaveCount(9);
-  const activeBefore = await filmstrip.locator(".card[aria-current='true']").getAttribute("aria-label");
-  await filmstrip.locator("#stage").press("ArrowRight");
-  await expect.poll(() => filmstrip.locator(".card[aria-current='true']").getAttribute("aria-label")).not.toBe(activeBefore);
 });
 
 test("keeps the portfolio command navigation destinations intact", async ({ page }, testInfo) => {
