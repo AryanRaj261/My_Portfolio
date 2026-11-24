@@ -48,8 +48,10 @@ function createSeoPlugin(siteUrl) {
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const configuredUrl = loadEnv(mode, process.cwd(), "VITE_").VITE_SITE_URL;
-  const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "";
-  const siteUrl = normalizeSiteUrl(configuredUrl || vercelUrl);
+  // VERCEL_URL is unique to each preview build, so it must never become the
+  // canonical address. Set VITE_SITE_URL when a custom production domain is
+  // ready; otherwise use the stable portfolio alias above.
+  const siteUrl = normalizeSiteUrl(configuredUrl);
 
   return {
     plugins: [react(), createSeoPlugin(siteUrl)],
