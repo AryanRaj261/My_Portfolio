@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
-import { FiArrowDownRight, FiDownload, FiMail, FiMenu, FiX } from "react-icons/fi";
+import { FiArrowDownRight, FiDownload, FiMail } from "react-icons/fi";
 import portrait from "./assets/avatar.webp";
 import { CondensationBackground } from "./effects/condensation/CondensationBackground";
 import { PortfolioChatbot } from "./components/PortfolioChatbot";
@@ -91,9 +91,7 @@ function DeferredVisual({ children, label }) {
 }
 
 export default function App() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [activeProject, setActiveProject] = useState(0);
-  const [hasScrolled, setHasScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("top");
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
@@ -124,13 +122,6 @@ export default function App() {
   }, [rawPointerX, rawPointerY, reduceMotion]);
 
   useEffect(() => {
-    const updateNav = () => setHasScrolled(window.scrollY > 32);
-    updateNav();
-    window.addEventListener("scroll", updateNav, { passive: true });
-    return () => window.removeEventListener("scroll", updateNav);
-  }, []);
-
-  useEffect(() => {
     const sections = ["top", ...navItems.map(([, id]) => id)]
       .map((id) => document.getElementById(id))
       .filter(Boolean);
@@ -147,31 +138,20 @@ export default function App() {
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (!menuOpen) return undefined;
-    const previousOverflow = document.body.style.overflow;
-    const closeOnEscape = (event) => event.key === "Escape" && setMenuOpen(false);
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", closeOnEscape);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", closeOnEscape);
-    };
-  }, [menuOpen]);
-
   return (
     <main className="portfolio">
       <div className="noise" aria-hidden="true" />
       <a className="skip-link" href="#content">Skip to content</a>
-      <header className={"nav " + (hasScrolled ? "nav--scrolled" : "")}>
-        <a className="nav-brand" href="#top" aria-label="Aryan Raj home">AR<span>·</span>RJ</a>
-        <nav className="nav-links" aria-label="Portfolio navigation">{navItems.map(([label, id]) => <a key={id} href={"#" + id} aria-current={activeSection === id ? "page" : undefined}>{label}</a>)}</nav>
-        <a className="nav-status" href="#contact"><i /> Available for work</a>
-        <button className="menu-toggle" type="button" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label={menuOpen ? "Close navigation" : "Open navigation"}>{menuOpen ? <FiX /> : <FiMenu />}</button>
-        <motion.span className="scroll-progress" style={{ scaleX: scrollProgress }} aria-hidden="true" />
+      <header className="portfolio-dock" aria-label="Portfolio command bar">
+        <Suspense fallback={<div className="portfolio-dock__loading" aria-hidden="true" />}>
+          <AnimatedTopDock variant="modern" proximity={122} spring={0.19} damping={0.70} widthGrowth={17} heightGrowth={16} drop={3.5} />
+        </Suspense>
+        <nav className="portfolio-dock__shortcuts" aria-label="Portfolio sections">
+          <a href="#top" aria-current={activeSection === "top" ? "page" : undefined}>Home</a>
+          {navItems.map(([label, id]) => <a key={id} href={"#" + id} aria-current={activeSection === id ? "page" : undefined}>{label}</a>)}
+        </nav>
+        <motion.span className="portfolio-dock__progress" style={{ scaleX: scrollProgress }} aria-hidden="true" />
       </header>
-
-      <AnimatePresence>{menuOpen && <motion.nav className="menu-sheet" initial={{ clipPath: "inset(0 0 100% 0)" }} animate={{ clipPath: "inset(0 0 0% 0)" }} exit={{ clipPath: "inset(100% 0 0 0)" }} transition={{ duration: .55, ease: [0.65, 0, .35, 1] }} aria-label="Mobile navigation">{navItems.map(([label, id], index) => <a onClick={() => setMenuOpen(false)} key={id} href={"#" + id}><small>0{index + 1}</small>{label}</a>)}</motion.nav>}</AnimatePresence>
 
       <section id="top" className="hero" aria-labelledby="hero-title">
         <Scene pointerX={pointerX} pointerY={pointerY} />
@@ -263,16 +243,6 @@ export default function App() {
         </div>
         <div className="shader-frame character-study__frame">
           <DeferredVisual label="Loading the character filmstrip study"><Suspense fallback={<div className="character-study__loading" aria-hidden="true" />}><CharacterCarousel variant="filmstrip" speed={1.00} scale={1.00} opacity={1.00} hue={0} saturation={1.00} brightness={1.00} /></Suspense></DeferredVisual>
-        </div>
-      </section>
-
-      <section className="dock-study" aria-labelledby="dock-title">
-        <div className="dock-study__intro section">
-          <Reveal><p className="eyebrow">06 / Command system</p></Reveal>
-          <Reveal delay={.1}><div><h2 id="dock-title">MOTION AT<br /><em>THE MARGIN.</em></h2><p>A source-backed command bar integrated to study proximity, spring dynamics and responsive interaction states.</p></div></Reveal>
-        </div>
-        <div className="shader-frame dock-study__frame">
-          <DeferredVisual label="Loading the command-bar interaction study"><Suspense fallback={<div className="dock-study__loading" aria-hidden="true" />}><AnimatedTopDock variant="modern" proximity={122} spring={0.19} damping={0.70} widthGrowth={17} heightGrowth={16} drop={3.5} /></Suspense></DeferredVisual>
         </div>
       </section>
 

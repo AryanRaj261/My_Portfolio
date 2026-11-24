@@ -4,7 +4,7 @@ test("navigates to selected work and changes the active case study", async ({ pa
   await page.goto("/");
   await page.emulateMedia({ reducedMotion: "reduce" });
 
-  await expect(page.locator(".nav-links a[href='#work']")).toHaveAttribute("href", "#work");
+  await expect(page.locator(".portfolio-dock__shortcuts a[href='#work']")).toHaveAttribute("href", "#work");
   await page.locator("#work").scrollIntoViewIfNeeded();
   await expect(page.locator("#work-title")).toHaveText("Ink Creative Studio");
 
@@ -39,16 +39,12 @@ test("activates the Glass AI particle burst", async ({ page }) => {
   await expect(glassFrame.locator("#status")).toHaveText("GPT 6 Sol — particle burst");
 });
 
-test("opens and closes mobile navigation with the keyboard", async ({ page }, testInfo) => {
+test("keeps portfolio section shortcuts available on mobile", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile", "Mobile-only interaction");
   await page.goto("/");
 
-  await page.getByRole("button", { name: "Open navigation" }).click();
-  await expect(page.getByRole("link", { name: "Experience" })).toBeVisible();
-  await page.waitForFunction(() => document.body.style.overflow === "hidden");
-
-  await page.keyboard.press("Escape");
-  await expect(page.getByRole("button", { name: "Close navigation" })).not.toBeVisible();
+  await expect(page.locator(".portfolio-dock .atd-modern__bar")).toBeVisible();
+  await expect(page.locator(".portfolio-dock__shortcuts a[href='#contact']")).toHaveAttribute("href", "#contact");
 });
 
 test("loads the local Etale authored document", async ({ page }) => {
@@ -85,8 +81,7 @@ test("loads the configured Character Filmstrip and responds to keyboard motion",
 test("loads the authored modern command dock and updates its active state", async ({ page }, testInfo) => {
   test.slow();
   await page.goto("/");
-  const dock = page.locator(".dock-study .animated-top-dock-component.atd-modern");
-  await dock.scrollIntoViewIfNeeded();
+  const dock = page.locator(".portfolio-dock .animated-top-dock-component.atd-modern");
   const primary = dock.locator(".atd-modern__dock");
   const dockItems = primary.locator("button");
 
