@@ -68,8 +68,11 @@ test("loads the local Etale authored document", async ({ page }) => {
 test("loads the configured Character Filmstrip and responds to keyboard motion", async ({ page }) => {
   test.slow();
   await page.goto("/");
+  // The authored document is deferred until its viewport container approaches
+  // the screen. Scroll the stable container first, then wait for its lazy host.
+  await page.locator(".character-study__frame").scrollIntoViewIfNeeded();
   const host = page.locator(".character-study .character-carousel");
-  await host.scrollIntoViewIfNeeded();
+  await expect(host).toBeVisible();
   const filmstrip = host.locator("iframe").contentFrame();
 
   await expect(filmstrip.locator("#deck[data-testid='filmstrip']")).toBeVisible();
@@ -79,8 +82,11 @@ test("loads the configured Character Filmstrip and responds to keyboard motion",
   await expect.poll(() => filmstrip.locator(".card[aria-current='true']").getAttribute("aria-label")).not.toBe(activeBefore);
 });
 
-test("keeps the portfolio command navigation destinations intact", async ({ page }) => {
+test("keeps the portfolio command navigation destinations intact", async ({ page }, testInfo) => {
   await page.goto("/");
+  if (testInfo.project.name === "mobile") {
+    await page.getByRole("button", { name: "Open navigation" }).click();
+  }
   await expect(page.getByRole("link", { name: "About" }).first()).toHaveAttribute("href", "#about");
   await expect(page.getByRole("link", { name: "Work" }).first()).toHaveAttribute("href", "#work");
   await expect(page.getByRole("link", { name: "Experience" }).first()).toHaveAttribute("href", "#experience");
