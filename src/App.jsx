@@ -135,7 +135,7 @@ export default function App() {
         </div>
         <div className="hero-portrait"><motion.img src={portrait} alt="Aryan Raj" initial={{ opacity: 0, y: 46 }} animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: [0, -8, 0] }} transition={{ opacity: { duration: .9, delay: .3 }, y: { duration: 5, repeat: Infinity, ease: "easeInOut" } }} /></div>
         <div className="hero-name" aria-hidden="true">ARYAN</div>
-        <div className="hero-bottom"><span>Scroll to enter</span><span className="hero-bottom__line" /><span>01 — 08</span></div>
+        <div className="hero-bottom"><span>Scroll to enter</span><span className="hero-bottom__line" /><span>01 — 05</span></div>
       </section>
 
       <div id="content">
@@ -198,7 +198,7 @@ export default function App() {
       </section>
 
       <section id="experience" className="experience section" aria-labelledby="experience-title">
-        <Reveal><p className="eyebrow">07 / Experience & craft</p></Reveal>
+        <Reveal><p className="eyebrow">04 / Experience & craft</p></Reveal>
         <div className="experience-heading"><Reveal><h2 id="experience-title">CLEAR BY<br /><em>DESIGN.</em></h2></Reveal><Reveal delay={.12}><p>From structure to interaction, I pay attention to the small choices that make a site easier to navigate and more dependable across screen sizes.</p></Reveal></div>
         <div className="craft-grid">
           <Reveal delay={0}><article><small>01</small><h3>Interfaces</h3><p>Responsive, expressive web experiences made with React and modern frontend tools.</p></article></Reveal>
@@ -209,7 +209,7 @@ export default function App() {
       </section>
 
       <section id="contact" className="contact section" aria-labelledby="contact-title">
-        <Reveal><p className="eyebrow">08 / Contact</p></Reveal>
+        <Reveal><p className="eyebrow">05 / Contact</p></Reveal>
         <div className="contact-grid"><Reveal><h2 id="contact-title">LET’S TALK<br />ABOUT THE<br /><em>WORK.</em></h2></Reveal><Reveal className="contact-copy" delay={.13}><p>For frontend roles, collaboration or a project conversation, email Aryan directly or connect on LinkedIn.</p><div className="contact-actions"><a className="contact-link" href={`mailto:${contactEmail}`}><FiMail /> {contactEmail}</a><a className="contact-link contact-link--secondary" href={linkedInProfile} target="_blank" rel="noreferrer">Connect on LinkedIn <FiArrowDownRight /></a></div><div><a href={githubProfile} target="_blank" rel="noreferrer"><FaGithub /> GitHub</a><a href={linkedInProfile} target="_blank" rel="noreferrer"><FaLinkedinIn /> LinkedIn</a></div></Reveal></div>
         <footer><span>© {new Date().getFullYear()} Aryan Raj</span><a href={portfolioRepository} target="_blank" rel="noreferrer">Portfolio source</a></footer>
       </section>
