@@ -87,7 +87,7 @@ function DeferredVisual({ children, label }) {
     return () => observer.disconnect();
   }, []);
 
-  return <div ref={hostRef} className="deferred-visual">{mounted ? children : <div className="deferred-visual__placeholder" aria-label={label}>{label}</div>}</div>;
+  return <div ref={hostRef} className="deferred-visual">{mounted ? children : <div className="deferred-visual__placeholder" role="status">{label}</div>}</div>;
 }
 
 export default function App() {
@@ -178,9 +178,9 @@ export default function App() {
         <div className="hero-copy">
           <motion.p className="eyebrow" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .25, duration: .6 }}><i /> Frontend developer · India</motion.p>
           <motion.h1 id="hero-title" initial={{ opacity: 0, y: 55 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .1, duration: .95, ease: [0.16, 1, .3, 1] }}>FRONTENDS WITH<br /><em>A POINT OF VIEW.</em></motion.h1>
-          <motion.p className="hero-body" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .45, duration: .75 }}>I’m Aryan Raj, a frontend developer focused on clear interfaces, considered interaction and reliable implementation.</motion.p>
+          <motion.p className="hero-body" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .45, duration: .75 }}>I’m Aryan Raj, a frontend developer building responsive interfaces with clear hierarchy, thoughtful interaction and dependable implementation.</motion.p>
           <motion.div className="hero-actions" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .58, duration: .65 }}><a className="hero-actions__primary" href="#work">View selected work</a><a className="hero-actions__secondary" href={`mailto:${contactEmail}`}><FiMail /> Email Aryan</a></motion.div>
-          <p className="hero-ai-study-label">Source-integrated interaction study</p>
+          <p className="hero-ai-study-label">Optional interaction study</p>
           <motion.div className="hero-ai-button" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .7, duration: .65, ease: [0.16, 1, .3, 1] }}><Suspense fallback={<div className="hero-ai-button__loading" aria-hidden="true" />}><GlassAiButton /></Suspense></motion.div>
           <motion.a className="hero-explore" href="#work" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .95, duration: .5 }}>Explore selected work <FiArrowDownRight /></motion.a>
         </div>
@@ -196,16 +196,16 @@ export default function App() {
           <Reveal><h2 id="about-title">DESIGN WITH<br /><em>INTENTION.</em></h2></Reveal>
           <Reveal className="about-copy" delay={.1}><p>I build interfaces that are easy to understand and satisfying to use. The visual choices support the content instead of competing with it.</p><p>My current work centres on React, responsive layouts and the practical details that make a frontend feel finished.</p><a className="line-link" href="/Resume.pdf" download>Download résumé <FiDownload /></a></Reveal>
         </div>
-        <Reveal className="skill-strip" delay={.18}>{["React", "JavaScript", "Node.js", "Python", "SQL"].map((skill) => <span key={skill}>{skill}</span>)}</Reveal>
+        <Reveal className="skill-strip" delay={.18}>{["React", "JavaScript", "Responsive UI", "Python", "SQL"].map((skill) => <span key={skill}>{skill}</span>)}</Reveal>
       </section>
 
       <section id="work" className="work section" aria-labelledby="work-title">
-        <Reveal className="section-heading"><p className="eyebrow">02 / Selected work</p><span>Choose a project</span></Reveal>
+        <Reveal className="section-heading"><p className="eyebrow">02 / Selected work</p><span>Independent concepts · choose a project</span></Reveal>
         <Reveal className="project-stage">
           <AnimatePresence mode="wait"><motion.div className="project-image" key={currentProject.id} initial={{ opacity: 0, scale: 1.05 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .98 }} transition={{ duration: .55, ease: [0.16, 1, .3, 1] }}><img src={currentProject.image} alt={currentProject.name + " project preview"} /><span className="project-image__wash" /><span className="project-image__label">Selected interface / {currentProject.id}</span></motion.div></AnimatePresence>
           <AnimatePresence mode="wait">
           <motion.div id="project-panel" role="tabpanel" aria-labelledby={`project-tab-${activeProject}`} className="project-content" key={currentProject.id} initial={reduceMotion ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={reduceMotion ? {} : { opacity: 0, y: -12 }} transition={{ duration: .38, ease: [0.16, 1, .3, 1] }}>
-            <div className="project-index"><span>{currentProject.id} / 03</span><span>Concept case study</span></div>
+            <div className="project-index"><span>{currentProject.id} / 03</span><span>Independent concept</span></div>
             <p>{currentProject.kind}</p>
             <h2 id="work-title">{currentProject.name}</h2>
             <div className="project-rule" />
@@ -222,7 +222,7 @@ export default function App() {
                 {currentProject.liveUrl && <a href={currentProject.liveUrl} target="_blank" rel="noreferrer" className="line-link">Live site <FiArrowDownRight /></a>}
                 {currentProject.repositoryUrl && <a href={currentProject.repositoryUrl} target="_blank" rel="noreferrer" className="line-link">Source code <FiArrowDownRight /></a>}
               </div>
-            ) : <p className="project-availability">Public links are being prepared.</p>}
+            ) : <p className="project-availability">Visual concept only · public implementation links are not available.</p>}
           </motion.div>
           </AnimatePresence>
           <div className="project-arrows"><button onClick={() => selectProject(activeProject - 1)} aria-label="Previous project">←</button><button onClick={() => selectProject(activeProject + 1)} aria-label="Next project">→</button></div>
@@ -250,29 +250,29 @@ export default function App() {
 
       <section className="etale-study" aria-labelledby="etale-title">
         <div className="etale-study__intro section">
-          <Reveal><p className="eyebrow">04 / Integration study</p></Reveal>
-          <Reveal delay={.1}><div><h2 id="etale-title">NUMBERS IN<br /><em>MOTION.</em></h2><p>A source-backed interaction integration, retained as a study in pacing, transition and spatial storytelling—not presented as client work.</p></div></Reveal>
+          <Reveal><p className="eyebrow">04 / Interaction lab</p></Reveal>
+          <Reveal delay={.1}><div><h2 id="etale-title">INTERACTION<br /><em>LAB.</em></h2><p>A source-backed interaction integration, retained as a study in pacing, transition and spatial storytelling—not presented as client work.</p></div></Reveal>
         </div>
-        <div className="shader-frame etale-study__frame"><DeferredVisual label="Load the Étale interaction study"><Suspense fallback={<div className="etale-study__loading" aria-hidden="true" />}><EtaleNumeralPlates /></Suspense></DeferredVisual></div>
+        <div className="shader-frame etale-study__frame"><DeferredVisual label="Loading the Étale interaction study"><Suspense fallback={<div className="etale-study__loading" aria-hidden="true" />}><EtaleNumeralPlates /></Suspense></DeferredVisual></div>
       </section>
 
       <section className="character-study" aria-labelledby="character-title">
         <div className="character-study__intro section">
-          <Reveal><p className="eyebrow eyebrow--warm">05 / Integration study</p></Reveal>
+          <Reveal><p className="eyebrow eyebrow--warm">05 / Motion study</p></Reveal>
           <Reveal delay={.1}><div><h2 id="character-title">PEOPLE, IN<br /><em>SEQUENCE.</em></h2><p>A source-backed editorial filmstrip integrated as a motion and accessibility exercise, separate from portfolio client or product work.</p></div></Reveal>
         </div>
         <div className="shader-frame character-study__frame">
-          <DeferredVisual label="Load the character filmstrip study"><Suspense fallback={<div className="character-study__loading" aria-hidden="true" />}><CharacterCarousel variant="filmstrip" speed={1.00} scale={1.00} opacity={1.00} hue={0} saturation={1.00} brightness={1.00} /></Suspense></DeferredVisual>
+          <DeferredVisual label="Loading the character filmstrip study"><Suspense fallback={<div className="character-study__loading" aria-hidden="true" />}><CharacterCarousel variant="filmstrip" speed={1.00} scale={1.00} opacity={1.00} hue={0} saturation={1.00} brightness={1.00} /></Suspense></DeferredVisual>
         </div>
       </section>
 
       <section className="dock-study" aria-labelledby="dock-title">
         <div className="dock-study__intro section">
-          <Reveal><p className="eyebrow">06 / Integration study</p></Reveal>
+          <Reveal><p className="eyebrow">06 / Command system</p></Reveal>
           <Reveal delay={.1}><div><h2 id="dock-title">MOTION AT<br /><em>THE MARGIN.</em></h2><p>A source-backed command bar integrated to study proximity, spring dynamics and responsive interaction states.</p></div></Reveal>
         </div>
         <div className="shader-frame dock-study__frame">
-          <DeferredVisual label="Load the command-bar interaction study"><Suspense fallback={<div className="dock-study__loading" aria-hidden="true" />}><AnimatedTopDock variant="modern" proximity={122} spring={0.19} damping={0.70} widthGrowth={17} heightGrowth={16} drop={3.5} /></Suspense></DeferredVisual>
+          <DeferredVisual label="Loading the command-bar interaction study"><Suspense fallback={<div className="dock-study__loading" aria-hidden="true" />}><AnimatedTopDock variant="modern" proximity={122} spring={0.19} damping={0.70} widthGrowth={17} heightGrowth={16} drop={3.5} /></Suspense></DeferredVisual>
         </div>
       </section>
 

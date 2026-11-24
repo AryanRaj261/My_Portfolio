@@ -8,7 +8,7 @@ export const projects = [
     name: "Ink Creative Studio",
     kind: "Independent interface concept",
     image: inkPreview,
-    stack: ["React", "Tailwind CSS", "Framer Motion"],
+    stack: ["Interface direction", "Responsive composition", "Motion studies"],
     problem: "Explore how an editorial creative-agency homepage can communicate a distinct point of view in its first screen.",
     contribution: "Visual direction, responsive component implementation and interaction styling for an independent interface exploration.",
     outcomes: [
@@ -24,7 +24,7 @@ export const projects = [
     name: "Gamily",
     kind: "Independent product concept",
     image: gamilyPreview,
-    stack: ["React", "JavaScript", "Responsive UI"],
+    stack: ["Product interface", "Responsive composition", "Interaction design"],
     problem: "Explore a gaming-discovery landing experience that feels energetic while preserving a direct route to action.",
     contribution: "Interface direction and reusable responsive frontend sections for an independent product concept.",
     outcomes: [
@@ -40,7 +40,7 @@ export const projects = [
     name: "Hungry Tiger",
     kind: "Independent storefront concept",
     image: hungryTigerPreview,
-    stack: ["React", "Tailwind CSS", "UI Design"],
+    stack: ["Storefront interface", "Visual system", "Responsive composition"],
     problem: "Explore a product-first storefront concept that keeps the featured item and buying journey visible.",
     contribution: "Interface direction and frontend implementation of the landing-page sections for an independent concept.",
     outcomes: [

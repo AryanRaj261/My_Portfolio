@@ -27,6 +27,7 @@
 ## Release checklist
 
 - `npm run lint`
+- `npm run typecheck`
 - `npm run build`
 - `npm run verify:etale`
 - `npm run test:e2e`

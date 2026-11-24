@@ -109,12 +109,18 @@ test("opens the portfolio guide and answers a project question", async ({ page }
   const launcher = page.getByRole("button", { name: "Open portfolio guide" });
   await launcher.click();
 
-  const guide = page.getByRole("dialog", { name: "A quick way to explore." });
+  const guide = page.getByRole("region", { name: "A quick way to explore." });
   await expect(guide).toBeVisible();
   await guide.getByRole("button", { name: "What does Aryan build?" }).click();
   await expect(guide.getByText(/frontend UI work/i)).toBeVisible();
   await guide.getByRole("button", { name: "Close portfolio guide" }).click();
   await expect(guide).not.toBeVisible();
+});
+
+test("renders deployment metadata from the configured site URL", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("head link[rel='canonical']")).toHaveAttribute("href", /my-portfolio-jade-nine-22\.vercel\.app/);
+  await expect(page.locator("head meta[property='og:image']")).toHaveAttribute("content", /og-cover\.png$/);
 });
 
 test("offers a direct email contact path", async ({ page }) => {

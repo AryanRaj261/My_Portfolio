@@ -79,15 +79,19 @@ export function PortfolioChatbot({ email }) {
     window.setTimeout(() => launcherRef.current?.focus(), 0);
   };
 
+  const minimizeGuide = () => {
+    setMinimized(true);
+    window.setTimeout(() => launcherRef.current?.focus(), 0);
+  };
+
   return (
     <aside className="portfolio-chat" aria-label="Portfolio guide">
       <AnimatePresence>
         {open && !minimized && (
           <motion.section
             className="portfolio-chat__panel"
-            role="dialog"
+            role="region"
             id="portfolio-chat-panel"
-            aria-modal="false"
             aria-labelledby="portfolio-chat-title"
             initial={{ opacity: 0, y: 18, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -96,7 +100,7 @@ export function PortfolioChatbot({ email }) {
           >
             <header className="portfolio-chat__header">
               <div><span className="portfolio-chat__status" aria-hidden="true" /><p>Portfolio guide</p><h2 id="portfolio-chat-title">A quick way to explore.</h2></div>
-              <div className="portfolio-chat__controls"><button type="button" onClick={() => setMinimized(true)} aria-label="Minimize portfolio guide"><FiMinus /></button><button type="button" onClick={closeGuide} aria-label="Close portfolio guide"><FiX /></button></div>
+              <div className="portfolio-chat__controls"><button type="button" onClick={minimizeGuide} aria-label="Minimize portfolio guide"><FiMinus /></button><button type="button" onClick={closeGuide} aria-label="Close portfolio guide"><FiX /></button></div>
             </header>
             <div className="portfolio-chat__messages" ref={messagesRef} aria-live="polite">
               {messages.map((message) => (

@@ -23,6 +23,8 @@ export default defineConfig([
       },
     },
     rules: {
+      // JSX component references need eslint-plugin-react's jsx-uses-vars rule.
+      // Keep this disabled until that plugin is added rather than reporting false positives.
       'no-unused-vars': 'off',
     },
   },
